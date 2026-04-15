@@ -942,7 +942,7 @@ const CONFIG = {
   CUTOFF_HOUR: 11,
   MIN_ORDER_NORMAL: 300,
   MIN_ORDER_REMOTE: 500,
-  GOOGLE_SHEET_URL: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec'  /* ← CHANGE 1: Replace YOUR_SCRIPT_ID_HERE with your deployed Apps Script URL */
+  GOOGLE_SHEET_URL: 'https://script.google.com/macros/s/AKfycby5JlLCnSkndfpKH6LcWlVmHNr7CLVKlTJKoDy3Pn2oFYaHF3qwSYksuHbRofFkFvp9/exec'
 };
 
 /* ================================================================
@@ -1675,7 +1675,7 @@ function sendToGoogleSheets(orderId, method) {
   fetch(CONFIG.GOOGLE_SHEET_URL, {
     method: 'POST',
     mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify(sheetData)
   })
   .then(function() { console.log('Order saved to Google Sheets'); })
