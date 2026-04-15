@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunshine Laundry 陽光洗衣 - Pick Up & Delivery</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #2D3E8D;
+  --primary-dark: #1F2D67;
+  --primary-light: #ECEEF8;
+  --accent: #5DB9BE;
+  --accent-2: #76C9C8;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-300: #d1d5db;
+  --gray-400: #9ca3af; --gray-500: #6b7280; --gray-600: #4b5563; --gray-700: #374151;
+  --gray-800: #1f2937; --gray-900: #111827;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+}
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #FFFFFF; color: var(--gray-800); line-height: 1.6; }
+.laundry-app { max-width: 900px; margin: 0 auto; padding: 20px 16px 80px; }
+
+.app-header {
+  text-align: center; padding: 40px 20px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 45%, var(--accent) 100%);
+  border-radius: var(--radius); color: white; margin-bottom: 32px;
+  position: relative; overflow: hidden;
+}
+.app-header::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle,rgba(255,255,255,0.08) 0%,transparent 60%); animation:shimmer 8s ease-in-out infinite; }
+@keyframes shimmer { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-20px)} }
+.app-header h1 { font-size:26px; font-weight:700; margin-bottom:4px; position:relative; }
+.app-header .sub-brand { font-size:15px; font-weight:500; opacity:0.92; position:relative; }
+.app-header p { font-size:14px; opacity:0.85; position:relative; margin-top:8px; }
+.header-icon { font-size:48px; margin-bottom:12px; display:block; }
+.header-phone { display:inline-block; margin-top:12px; padding:6px 18px; background:rgba(255,255,255,0.18); border-radius:50px; font-size:16px; font-weight:700; position:relative; letter-spacing:0.5px; }
+
+.progress-bar { display:flex; justify-content:center; align-items:center; margin-bottom:32px; gap:0; flex-wrap:wrap; padding:0 10px; }
+.progress-step { display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:50px; font-size:13px; font-weight:500; color:var(--gray-400); background:white; border:2px solid var(--gray-200); transition:all 0.3s; cursor:pointer; }
+.progress-step.active { color:var(--primary); border-color:var(--primary); background:var(--primary-light); }
+.progress-step.completed { color:var(--accent); border-color:var(--accent); background:#e6f5f5; }
+.progress-step .step-num { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; background:var(--gray-200); color:var(--gray-500); flex-shrink:0; }
+.progress-step.active .step-num { background:var(--primary); color:white; }
+.progress-step.completed .step-num { background:var(--accent); color:white; }
+.progress-connector { width:30px; height:2px; background:var(--gray-200); flex-shrink:0; }
+.progress-connector.active { background:var(--primary); }
+
+.card { background:white; border-radius:var(--radius); padding:28px 24px; margin-bottom:20px; box-shadow:var(--shadow); border:1px solid var(--gray-100); }
+.card-title { font-size:20px; font-weight:700; color:var(--gray-900); margin-bottom:6px; display:flex; align-items:center; gap:10px; }
+.card-subtitle { font-size:14px; color:var(--gray-500); margin-bottom:24px; }
+.form-group { margin-bottom:20px; }
+.form-label { display:block; font-size:14px; font-weight:600; color:var(--gray-700); margin-bottom:6px; }
+.form-label .required { color:var(--danger); }
+.form-input, .form-select, .form-textarea {
+  width:100%; padding:12px 16px; border:2px solid var(--gray-200); border-radius:10px; font-size:15px;
+  font-family:inherit; color:var(--gray-800); background:white; transition:border-color 0.2s, box-shadow 0.2s; -webkit-appearance:none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(45,62,141,0.12); }
+.form-select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:40px; }
+.form-textarea { resize:vertical; min-height:80px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-hint { font-size:12px; color:var(--gray-400); margin-top:4px; }
+.form-error { font-size:12px; color:var(--danger); margin-top:4px; display:none; }
+.form-group.error .form-input, .form-group.error .form-select, .form-group.error .form-textarea { border-color:var(--danger); }
+.form-group.error .form-error { display:block; }
+
+.service-grid { display:grid; grid-template-columns:1fr; gap:14px; }
+.service-card { border:2px solid var(--gray-200); border-radius:var(--radius); padding:20px; cursor:pointer; transition:all 0.2s; position:relative; display:flex; gap:16px; align-items:flex-start; }
+.service-card:hover { border-color:var(--primary); background:var(--primary-light); }
+.service-card.selected { border-color:var(--primary); background:var(--primary-light); box-shadow:0 0 0 3px rgba(45,62,141,0.15); }
+.service-card .service-icon { font-size:36px; flex-shrink:0; }
+.service-card .service-info h3 { font-size:16px; font-weight:700; color:var(--gray-900); margin-bottom:4px; }
+.service-card .service-info p { font-size:13px; color:var(--gray-500); margin-bottom:6px; }
+.service-badge { display:inline-block; padding:3px 10px; border-radius:50px; font-size:12px; font-weight:600; }
+.badge-blue { background:var(--primary-light); color:var(--primary); }
+.badge-teal { background:#e6f5f5; color:#0d7377; }
+.badge-orange { background:#fef3c7; color:#d97706; }
+.badge-purple { background:#ede9fe; color:#7c3aed; }
+.badge-green { background:#d1fae5; color:#047857; }
+.badge-red { background:#fee2e2; color:#dc2626; }
+.service-check { position:absolute; top:12px; right:12px; width:24px; height:24px; border-radius:50%; border:2px solid var(--gray-300); display:flex; align-items:center; justify-content:center; transition:all 0.2s; font-size:14px; }
+.service-card.selected .service-check { background:var(--primary); border-color:var(--primary); color:white; }
+
+.info-box { padding:16px 20px; border-radius:10px; font-size:14px; display:flex; gap:12px; align-items:flex-start; margin-bottom:16px; line-height:1.5; }
+.info-box.blue { background:var(--primary-light); color:var(--primary-dark); border:1px solid #B8BFD8; }
+.info-box.yellow { background:#fef9c3; color:#92400e; border:1px solid #fde68a; }
+.info-box.green { background:#d1fae5; color:#065f46; border:1px solid #a7f3d0; }
+.info-box.red { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
+.info-box.teal { background:#e6f5f5; color:#0d5c5f; border:1px solid #b2e0e0; }
+.info-box-icon { font-size:20px; flex-shrink:0; margin-top:1px; }
+
+.pricing-table { width:100%; border-collapse:collapse; margin:0 0 4px; font-size:13px; }
+.pricing-table th { text-align:left; padding:10px 12px; background:var(--primary-dark); color:white; font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.5px; position:sticky; top:0; z-index:1; }
+.pricing-table th:last-child { text-align:right; }
+.pricing-table td { padding:9px 12px; border-bottom:1px solid var(--gray-100); color:var(--gray-600); }
+.pricing-table td:last-child { text-align:right; font-weight:600; color:var(--gray-800); white-space:nowrap; }
+.pricing-table tr:last-child td { border-bottom:none; }
+.pricing-table tr:hover td { background:var(--primary-light); }
+.pricing-table .cat-row td { background:var(--gray-50); font-weight:700; color:var(--gray-700); font-size:13px; border-bottom:2px solid var(--gray-200); padding:10px 12px; }
+.pricing-table .no-disc td { background:#fff7ed; }
+.pricing-table .item-cn { display:block; font-size:12px; color:var(--gray-400); margin-top:1px; }
+.pricing-scroll { max-height:500px; overflow-y:auto; border:1px solid var(--gray-200); border-radius:8px; }
+
+.accordion { margin-bottom:16px; border:2px solid var(--gray-200); border-radius:var(--radius); overflow:hidden; }
+.accordion-header { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; background:white; cursor:pointer; font-size:16px; font-weight:600; color:var(--gray-800); transition:background 0.2s; user-select:none; }
+.accordion-header:hover { background:var(--gray-50); }
+.accordion-header .acc-icon { transition:transform 0.3s; font-size:14px; }
+.accordion-header.open .acc-icon { transform:rotate(180deg); }
+.accordion-body { display:none; padding:0 20px 20px; background:white; }
+.accordion-body.open { display:block; }
+
+.discount-card { display:flex; align-items:center; gap:16px; padding:16px 20px; border:2px solid var(--gray-200); border-radius:10px; margin-bottom:10px; transition:all 0.2s; cursor:pointer; }
+.discount-card:hover { border-color:var(--primary); background:var(--primary-light); }
+.discount-card.selected { border-color:var(--primary); background:var(--primary-light); box-shadow:0 0 0 3px rgba(45,62,141,0.12); }
+.discount-icon { font-size:32px; flex-shrink:0; }
+.discount-info h4 { font-size:15px; font-weight:600; color:var(--gray-800); }
+.discount-info p { font-size:13px; color:var(--gray-500); }
+.discount-badge { margin-left:auto; padding:4px 12px; border-radius:50px; font-size:13px; font-weight:700; background:#d1fae5; color:#047857; flex-shrink:0; }
+
+.photo-upload-area { border:2px dashed var(--gray-300); border-radius:var(--radius); padding:30px 20px; text-align:center; cursor:pointer; transition:all 0.2s; background:var(--gray-50); }
+.photo-upload-area:hover, .photo-upload-area.dragover { border-color:var(--primary); background:var(--primary-light); }
+.photo-upload-icon { font-size:40px; margin-bottom:8px; }
+.photo-upload-text { font-size:14px; color:var(--gray-600); font-weight:500; }
+.photo-upload-hint { font-size:12px; color:var(--gray-400); margin-top:4px; }
+.photo-preview-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:12px; margin-top:16px; }
+.photo-preview-item { position:relative; border-radius:10px; overflow:hidden; aspect-ratio:1; background:var(--gray-100); border:2px solid var(--gray-200); }
+.photo-preview-item img { width:100%; height:100%; object-fit:cover; }
+.photo-remove-btn { position:absolute; top:4px; right:4px; width:24px; height:24px; border-radius:50%; background:rgba(239,68,68,0.9); color:white; border:none; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; font-weight:700; line-height:1; }
+.photo-count { font-size:13px; color:var(--gray-500); margin-top:8px; }
+
+.quick-date-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; margin-bottom:16px; }
+.date-btn { padding:16px 12px; border:2px solid var(--gray-200); border-radius:var(--radius); cursor:pointer; text-align:center; transition:all 0.2s; background:white; }
+.date-btn:hover:not(.disabled) { border-color:var(--primary); background:var(--primary-light); }
+.date-btn.selected { border-color:var(--primary); background:var(--primary-light); box-shadow:0 0 0 3px rgba(45,62,141,0.12); }
+.date-btn.disabled { opacity:0.38; cursor:not-allowed; }
+.date-btn .db-icon { font-size:26px; margin-bottom:6px; }
+.date-btn .db-label { font-size:14px; font-weight:600; color:var(--gray-800); }
+.date-btn .db-date { font-size:12px; color:var(--gray-500); margin-top:2px; }
+.date-btn .db-note { font-size:11px; font-weight:600; margin-top:4px; }
+.date-btn .db-note.red { color:var(--danger); }
+.date-btn .db-note.green { color:var(--success); }
+.date-btn .db-note.orange { color:var(--warning); }
+
+.slot-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; margin-bottom:16px; }
+.slot-card { padding:18px 14px; border:2px solid var(--gray-200); border-radius:var(--radius); cursor:pointer; text-align:center; transition:all 0.2s; background:white; position:relative; }
+.slot-card:hover:not(.disabled) { border-color:var(--primary); background:var(--primary-light); }
+.slot-card.selected { border-color:var(--primary); background:var(--primary-light); box-shadow:0 0 0 3px rgba(45,62,141,0.12); }
+.slot-card.disabled { opacity:0.35; cursor:not-allowed; background:var(--gray-50); }
+.slot-card .sc-icon { font-size:28px; margin-bottom:6px; }
+.slot-card .sc-label { font-size:14px; font-weight:700; color:var(--gray-800); }
+.slot-card .sc-time { font-size:13px; color:var(--gray-500); margin-top:2px; }
+.slot-card .sc-note { font-size:11px; color:var(--warning); font-weight:600; margin-top:4px; }
+.slot-card.special-slot { border-style:dashed; }
+
+.driver-card {
+  margin-top:20px; padding:20px; border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--primary-light),#dce0f3); border:2px solid #8a9ad4;
+  position:relative; overflow:hidden;
+}
+.driver-card::before { content:''; position:absolute; top:10px; right:16px; font-size:48px; opacity:0.12; }
+.driver-card h4 { font-size:16px; font-weight:700; color:var(--primary-dark); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.driver-detail-row { display:flex; align-items:center; gap:8px; padding:6px 0; font-size:14px; color:var(--gray-700); }
+.driver-detail-row .dr-icon { font-size:18px; flex-shrink:0; width:24px; text-align:center; }
+.driver-detail-row strong { color:var(--primary-dark); }
+.driver-detail-row .dr-badge { display:inline-block; padding:2px 10px; border-radius:50px; font-size:12px; font-weight:700; background:var(--primary); color:white; margin-left:4px; }
+.driver-detail-row .dr-badge.backup { background:var(--warning); color:white; }
+
+.admin-float-btn {
+  position:fixed; bottom:20px; right:20px; width:52px; height:52px;
+  border-radius:50%; background:var(--primary-dark); color:white;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; cursor:pointer; box-shadow:var(--shadow-lg);
+  z-index:9998; transition:all 0.3s; border:none;
+}
+.admin-float-btn:hover { background:var(--primary); transform:scale(1.1); }
+.admin-float-btn.active { background:var(--accent); box-shadow:0 0 0 4px rgba(93,185,190,0.35); }
+.admin-indicator {
+  position:fixed; bottom:80px; right:20px; padding:6px 14px;
+  border-radius:50px; background:var(--accent); color:white;
+  font-size:12px; font-weight:700; z-index:9998;
+  display:none; box-shadow:var(--shadow-md);
+}
+.admin-indicator.show { display:block; }
+.admin-only { display:none !important; }
+body.admin-mode .admin-only { display:block !important; }
+
+.admin-schedule-panel {
+  position:fixed; top:0; right:-440px; width:420px; height:100vh;
+  background:white; z-index:9999; box-shadow:-4px 0 24px rgba(0,0,0,0.15);
+  transition:right 0.4s ease; overflow-y:auto; padding:24px;
+}
+.admin-schedule-panel.open { right:0; }
+.admin-schedule-panel h3 { font-size:18px; font-weight:700; color:var(--gray-900); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.admin-panel-close { position:absolute; top:16px; right:16px; width:32px; height:32px; border-radius:50%; background:var(--gray-100); border:none; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
+.admin-panel-close:hover { background:var(--gray-200); }
+.schedule-block { margin-bottom:20px; padding:16px; background:var(--gray-50); border-radius:10px; border:1px solid var(--gray-200); }
+.schedule-block h4 { font-size:14px; font-weight:700; color:var(--gray-700); margin-bottom:10px; }
+.schedule-block .sb-row { display:flex; justify-content:space-between; padding:5px 0; font-size:13px; border-bottom:1px solid var(--gray-100); }
+.schedule-block .sb-row:last-child { border-bottom:none; }
+.schedule-block .sb-zone { color:var(--gray-600); }
+.schedule-block .sb-driver { font-weight:600; color:var(--primary-dark); }
+.schedule-block.rest-block { background:#fef9c3; border-color:#fde68a; }
+.schedule-block.rest-block h4 { color:#92400e; }
+
+.pin-modal-box { max-width:340px; }
+.pin-input { width:100%; padding:16px; border:2px solid var(--gray-200); border-radius:10px; font-size:28px; text-align:center; letter-spacing:12px; font-family:monospace; margin-bottom:16px; }
+.pin-input:focus { outline:none; border-color:var(--primary); }
+.pin-error { color:var(--danger); font-size:13px; display:none; margin-bottom:12px; }
+
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--gray-100); }
+.toggle-row:last-child { border-bottom:none; }
+.toggle-info h4 { font-size:15px; font-weight:600; color:var(--gray-800); }
+.toggle-info p { font-size:13px; color:var(--gray-500); }
+.toggle-switch { position:relative; width:48px; height:26px; flex-shrink:0; }
+.toggle-switch input { display:none; }
+.toggle-slider { position:absolute; inset:0; background:var(--gray-300); border-radius:50px; cursor:pointer; transition:0.3s; }
+.toggle-slider::before { content:''; position:absolute; width:20px; height:20px; left:3px; top:3px; background:white; border-radius:50%; transition:0.3s; box-shadow:var(--shadow); }
+.toggle-switch input:checked + .toggle-slider { background:var(--primary); }
+.toggle-switch input:checked + .toggle-slider::before { transform:translateX(22px); }
+
+.btn { padding:14px 28px; border-radius:10px; font-size:15px; font-weight:600; font-family:inherit; cursor:pointer; border:none; transition:all 0.2s; display:inline-flex; align-items:center; justify-content:center; gap:8px; }
+.btn-primary { background:var(--primary); color:white; box-shadow:0 2px 8px rgba(45,62,141,0.3); }
+.btn-primary:hover { background:var(--primary-dark); transform:translateY(-1px); }
+.btn-secondary { background:white; color:var(--gray-700); border:2px solid var(--gray-200); }
+.btn-secondary:hover { background:var(--gray-50); border-color:var(--gray-300); }
+.btn-success { background:var(--success); color:white; }
+.btn-whatsapp { background:#25d366; color:white; box-shadow:0 2px 8px rgba(37,211,102,0.3); }
+.btn-whatsapp:hover { background:#1da851; transform:translateY(-1px); }
+.btn-block { width:100%; }
+.btn-group { display:flex; gap:12px; margin-top:24px; }
+.btn-group .btn { flex:1; }
+
+.summary-section { padding:20px; background:var(--gray-50); border-radius:10px; margin-bottom:16px; }
+.summary-section h4 { font-size:14px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; }
+.summary-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; font-size:14px; }
+.summary-row .label { color:var(--gray-600); }
+.summary-row .value { font-weight:600; color:var(--gray-800); }
+.summary-divider { height:1px; background:var(--gray-200); margin:10px 0; }
+.summary-total { display:flex; justify-content:space-between; align-items:center; padding:14px 0 0; font-size:18px; font-weight:700; }
+.summary-total .value { color:var(--primary); }
+
+.section { display:none; }
+.section.active { display:block; }
+
+.success-screen { text-align:center; padding:40px 20px; }
+.success-icon { width:80px; height:80px; background:#e6f5f5; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; font-size:40px; }
+.success-screen h2 { font-size:24px; font-weight:700; color:var(--gray-900); margin-bottom:8px; }
+.success-screen p { font-size:15px; color:var(--gray-500); margin-bottom:24px; }
+.order-number { display:inline-block; padding:8px 20px; background:var(--primary-light); border-radius:50px; font-size:16px; font-weight:700; color:var(--primary); margin-bottom:24px; }
+
+.price-tab-bar { display:flex; gap:4px; margin-bottom:16px; background:var(--gray-100); border-radius:10px; padding:4px; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.price-tab-bar::-webkit-scrollbar { height:0; }
+.price-tab-btn { flex-shrink:0; padding:8px 12px; border:none; background:transparent; border-radius:8px; font-size:12px; font-weight:600; font-family:inherit; color:var(--gray-500); cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+.price-tab-btn.active { background:white; color:var(--primary); box-shadow:var(--shadow); }
+.price-tab-content { display:none; }
+.price-tab-content.active { display:block; }
+
+.sum-photos { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+.sum-photos img { width:60px; height:60px; object-fit:cover; border-radius:8px; border:2px solid var(--gray-200); }
+
+.terms-list { font-size:12.5px; color:var(--gray-600); line-height:1.8; padding-left:16px; margin-top:12px; }
+.terms-list li { margin-bottom:6px; }
+.terms-list .no-disc { color:var(--danger); font-weight:600; }
+.terms-list .highlight { color:var(--primary-dark); font-weight:600; }
+.terms-list .term-en { display:block; font-size:11.5px; color:var(--gray-400); margin-top:1px; }
+
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:white; border-radius:var(--radius); padding:28px; max-width:420px; width:100%; box-shadow:var(--shadow-xl); text-align:center; }
+.modal-box h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
+.modal-box p { font-size:14px; color:var(--gray-500); margin-bottom:20px; line-height:1.6; }
+.modal-box .btn { min-width:120px; }
+
+.stairs-section { margin-top:20px; padding:20px; background:var(--gray-50); border-radius:10px; border:1px solid var(--gray-200); }
+.stairs-section h4 { font-size:15px; font-weight:600; margin-bottom:12px; color:var(--gray-700); }
+.stairs-result { font-size:14px; font-weight:600; color:var(--primary); margin-top:4px; }
+
+.photo-warning-banner {
+  padding:20px 24px; border-radius:var(--radius); margin-bottom:16px;
+  background:linear-gradient(135deg,#fef3c7,#fde68a); border:3px solid #f59e0b;
+  text-align:center; position:relative; overflow:hidden;
+}
+.photo-warning-banner::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:4px;
+  background:repeating-linear-gradient(90deg,#f59e0b 0,#f59e0b 20px,#fbbf24 20px,#fbbf24 40px);
+}
+.photo-warning-banner .pw-icon { font-size:36px; display:block; margin-bottom:8px; }
+.photo-warning-banner .pw-title { font-size:16px; font-weight:700; color:#92400e; margin-bottom:6px; }
+.photo-warning-banner .pw-text { font-size:14px; color:#78350f; line-height:1.6; }
+.photo-warning-banner .pw-note { font-size:12px; color:#a16207; margin-top:8px; font-style:italic; }
+
+@media (max-width:600px) {
+  .laundry-app { padding:12px 10px 60px; }
+  .app-header { padding:28px 16px; }
+  .app-header h1 { font-size:20px; }
+  .card { padding:20px 16px; }
+  .form-row { grid-template-columns:1fr; gap:0; }
+  .progress-bar { gap:4px; }
+  .progress-step { padding:8px 10px; font-size:11px; }
+  .progress-step .step-label { display:none; }
+  .progress-connector { width:16px; }
+  .btn-group { flex-direction:column; }
+  .btn-group .btn { width:100%; }
+  .quick-date-grid { grid-template-columns:repeat(2,1fr); }
+  .slot-grid { grid-template-columns:1fr 1fr; }
+  .admin-schedule-panel { width:100%; right:-100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="laundry-app" id="laundryApp">
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <span class="header-icon">☀️🧺</span>
+    <h1>陽光洗衣 SUNSHINE Laundry</h1>
+    <div class="sub-brand">洗衣宅急便 Laundry Delivery</div>
+    <p>Professional Laundry Pick Up & Delivery Service Across Hong Kong</p>
+    <div class="header-phone">📞 6629 1949</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-step active" onclick="goToStep(1)"><span class="step-num">1</span><span class="step-label">Details</span></div>
+    <div class="progress-connector"></div>
+    <div class="progress-step" onclick="goToStep(2)"><span class="step-num">2</span><span class="step-label">Service</span></div>
+    <div class="progress-connector"></div>
+    <div class="progress-step" onclick="goToStep(3)"><span class="step-num">3</span><span class="step-label">Schedule</span></div>
+    <div class="progress-connector"></div>
+    <div class="progress-step" onclick="goToStep(4)"><span class="step-num">4</span><span class="step-label">Review</span></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="section active" id="step1">
+    <div class="card">
+      <div class="card-title">📋 Your Details 顧客資料</div>
+      <div class="card-subtitle">Please provide your contact information and pickup address.</div>
+      <div class="form-row">
+        <div class="form-group" id="fg-name">
+          <label class="form-label">Full Name 姓名 <span class="required">*</span></label>
+          <input type="text" class="form-input" id="customerName" placeholder="e.g. Chan Tai Man">
+          <div class="form-error">Please enter your name.</div>
+        </div>
+        <div class="form-group" id="fg-phone">
+          <label class="form-label">Phone / WhatsApp 電話 <span class="required">*</span></label>
+          <input type="tel" class="form-input" id="customerPhone" placeholder="e.g. 9123 4567">
+          <div class="form-error">Please enter a valid phone number.</div>
+        </div>
+      </div>
+      <div class="form-group" id="fg-email">
+        <label class="form-label">Email 電郵</label>
+        <input type="email" class="form-input" id="customerEmail" placeholder="e.g. name@email.com">
+        <div class="form-hint">Optional — for order confirmation & receipt.</div>
+      </div>
+      <div class="form-group" id="fg-address">
+        <label class="form-label">Pickup Address 取衣地址 <span class="required">*</span></label>
+        <textarea class="form-textarea form-input" id="customerAddress" placeholder="e.g. Flat A, 12/F, Block 3, City Garden, North Point"></textarea>
+        <div class="form-error">Please enter your pickup address.</div>
+      </div>
+      <div class="form-group" id="fg-area">
+        <label class="form-label">Area / District 地區 <span class="required">*</span></label>
+        <select class="form-select" id="customerArea" onchange="onAreaChange()">
+          <option value="">— Select your area —</option>
+          <optgroup label="Hong Kong Island 港島">
+            <option value="central">Central 中環</option>
+            <option value="sheung_wan">Sheung Wan 上環</option>
+            <option value="sai_ying_pun">Sai Ying Pun 西營盤</option>
+            <option value="kennedy_town">Kennedy Town 堅尼地城</option>
+            <option value="wanchai">Wan Chai 灣仔</option>
+            <option value="causeway_bay">Causeway Bay 銅鑼灣</option>
+            <option value="happy_valley">Happy Valley 跑馬地</option>
+            <option value="mid_levels">Mid-Levels 半山</option>
+            <option value="the_peak">The Peak 山頂</option>
+            <option value="north_point">North Point 北角</option>
+            <option value="quarry_bay">Quarry Bay 鰂魚涌</option>
+            <option value="tai_koo">Tai Koo 太古</option>
+            <option value="sai_wan_ho">Sai Wan Ho 西灣河</option>
+            <option value="shau_kei_wan">Shau Kei Wan 筲箕灣</option>
+            <option value="chai_wan">Chai Wan 柴灣</option>
+            <option value="siu_sai_wan">Siu Sai Wan 小西灣</option>
+            <option value="heng_fa_chuen">Heng Fa Chuen 杏花邨</option>
+            <option value="pok_fu_lam">Pok Fu Lam 薄扶林</option>
+            <option value="aberdeen">Aberdeen 香港仔</option>
+            <option value="ap_lei_chau">Ap Lei Chau 鴨脷洲</option>
+            <option value="wong_chuk_hang">Wong Chuk Hang 黃竹坑</option>
+            <option value="repulse_bay">Repulse Bay 淺水灣</option>
+            <option value="stanley">Stanley 赤柱</option>
+            <option value="shek_o">Shek O 石澳</option>
+          </optgroup>
+          <optgroup label="Kowloon 九龍">
+            <option value="tsim_sha_tsui">Tsim Sha Tsui 尖沙咀</option>
+            <option value="jordan">Jordan 佐敦</option>
+            <option value="yau_ma_tei">Yau Ma Tei 油麻地</option>
+            <option value="mong_kok">Mong Kok 旺角</option>
+            <option value="prince_edward">Prince Edward 太子</option>
+            <option value="sham_shui_po">Sham Shui Po 深水埗</option>
+            <option value="cheung_sha_wan">Cheung Sha Wan 長沙灣</option>
+            <option value="lai_chi_kok">Lai Chi Kok 荔枝角</option>
+            <option value="mei_foo">Mei Foo 美孚</option>
+            <option value="kowloon_tong">Kowloon Tong 九龍塘</option>
+            <option value="kowloon_city">Kowloon City 九龍城</option>
+            <option value="ho_man_tin">Ho Man Tin 何文田</option>
+            <option value="to_kwa_wan">To Kwa Wan 土瓜灣</option>
+            <option value="hung_hom">Hung Hom 紅磡</option>
+            <option value="kwun_tong">Kwun Tong 觀塘</option>
+            <option value="ngau_tau_kok">Ngau Tau Kok 牛頭角</option>
+            <option value="diamond_hill">Diamond Hill 鑽石山</option>
+            <option value="wong_tai_sin">Wong Tai Sin 黃大仙</option>
+            <option value="san_po_kong">San Po Kong 新蒲崗</option>
+            <option value="lam_tin">Lam Tin 藍田</option>
+            <option value="yau_tong">Yau Tong 油塘</option>
+          </optgroup>
+          <optgroup label="New Territories 新界">
+            <option value="tsuen_wan">Tsuen Wan 荃灣</option>
+            <option value="kwai_fong">Kwai Fong 葵芳</option>
+            <option value="kwai_chung">Kwai Chung 葵涌</option>
+            <option value="tsing_yi">Tsing Yi 青衣</option>
+            <option value="tuen_mun">Tuen Mun 屯門</option>
+            <option value="yuen_long">Yuen Long 元朗</option>
+            <option value="tin_shui_wai">Tin Shui Wai 天水圍</option>
+            <option value="sheung_shui">Sheung Shui 上水</option>
+            <option value="fanling">Fanling 粉嶺</option>
+            <option value="tai_po">Tai Po 大埔</option>
+            <option value="sha_tin">Sha Tin 沙田</option>
+            <option value="fo_tan">Fo Tan 火炭</option>
+            <option value="ma_on_shan">Ma On Shan 馬鞍山</option>
+            <option value="tai_wai">Tai Wai 大圍</option>
+            <option value="tseung_kwan_o">Tseung Kwan O 將軍澳</option>
+            <option value="sai_kung">Sai Kung 西貢</option>
+          </optgroup>
+          <optgroup label="Special 特別區域">
+            <option value="tung_chung" data-remote="true">Tung Chung 東涌 ✈️</option>
+            <option value="discovery_bay" data-remote="true">Discovery Bay 愉景灣 🚢</option>
+          </optgroup>
+        </select>
+        <div class="form-error">Please select your area.</div>
+      </div>
+      <div id="remoteAreaNotice" class="info-box yellow" style="display:none;">
+        <span class="info-box-icon">⚠️</span>
+        <div><strong>Remote Area 偏遠地區:</strong> Minimum order <strong>HK$500</strong>. If your order is below $500, the minimum fee of $500 will apply.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Delivery Address 送回地址 (if different from pickup)</label>
+        <textarea class="form-textarea form-input" id="deliveryAddress" placeholder="Leave blank if same as pickup address"></textarea>
+      </div>
+      <div class="btn-group">
+        <div></div>
+        <button class="btn btn-primary" onclick="nextStep(1)">Continue → Service Selection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="section" id="step2">
+    <div class="card">
+      <div class="card-title">👕 Select Services 選擇服務</div>
+      <div class="card-subtitle">Choose one or more services you need.</div>
+      <div class="service-grid">
+        <div class="service-card" onclick="toggleService(this,'dry_clean')" data-service="dry_clean">
+          <span class="service-icon">🧥</span>
+          <div class="service-info">
+            <h3>Dry Clean w/ Iron 乾洗連熨衣</h3>
+            <p>Suits, coats, dresses, formal wear, delicate fabrics.</p>
+            <span class="service-badge badge-blue">~5-7 working days</span>
+          </div>
+          <div class="service-check">✓</div>
+        </div>
+        <div class="service-card" onclick="toggleService(this,'laundry_iron')" data-service="laundry_iron">
+          <span class="service-icon">👔</span>
+          <div class="service-info">
+            <h3>Laundry w/ Iron 濕洗連熨衣</h3>
+            <p>Shirts, t-shirts, jeans, everyday wear.</p>
+            <span class="service-badge badge-green">~3-5 working days</span>
+          </div>
+          <div class="service-check">✓</div>
+        </div>
+        <div class="service-card" onclick="toggleService(this,'laundry_weight')" data-service="laundry_weight">
+          <span class="service-icon">⚖️</span>
+          <div class="service-info">
+            <h3>Wash by Weight 磅洗 (No Iron)</h3>
+            <p>Bulk laundry by weight. Min 6 lbs = HK$56, then $8/lb.</p>
+            <span class="service-badge badge-orange">~3-5 working days</span>
+          </div>
+          <div class="service-check">✓</div>
+        </div>
+        <div class="service-card" onclick="toggleService(this,'bags_shoes_leather')" data-service="bags_shoes_leather">
+          <span class="service-icon">👜</span>
+          <div class="service-info">
+            <h3>Bags, Shoes, Leather & Fur 手袋/鞋/皮草</h3>
+            <p>Handbags, wallets, sneakers, leather, fur coats.</p>
+            <span class="service-badge badge-purple">~15-20 working days</span>
+            <span class="service-badge badge-red" style="margin-left:4px">No Discount</span>
+          </div>
+          <div class="service-check">✓</div>
+        </div>
+        <div class="service-card" onclick="toggleService(this,'color_dye')" data-service="color_dye">
+          <span class="service-icon">🎨</span>
+          <div class="service-info">
+            <h3>Color Dye 染色服務</h3>
+            <p>Professional dyeing. Price by quotation.</p>
+            <span class="service-badge badge-red">Price by Quote</span>
+            <span class="service-badge badge-red" style="margin-left:4px">No Discount</span>
+          </div>
+          <div class="service-check">✓</div>
+        </div>
+      </div>
+      <div id="serviceError" class="info-box red" style="display:none; margin-top:16px;">
+        <span class="info-box-icon">⚠️</span><div>Please select at least one service.</div>
+      </div>
+
+      <!-- PRICE LIST -->
+      <div style="margin-top:24px;">
+        <div class="accordion" id="accPriceList">
+          <div class="accordion-header" onclick="toggleAccordion('accPriceList')">
+            <span>💲 Full Price List 完整價目表</span><span class="acc-icon">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="price-tab-bar">
+              <button class="price-tab-btn active" onclick="switchPriceTab(this,'tabDryClean')">🧥 Dry Clean</button>
+              <button class="price-tab-btn" onclick="switchPriceTab(this,'tabLaundryIron')">👔 Laundry</button>
+              <button class="price-tab-btn" onclick="switchPriceTab(this,'tabWeight')">⚖️ By Weight</button>
+              <button class="price-tab-btn" onclick="switchPriceTab(this,'tabLeather')">🧥 Leather/Fur</button>
+              <button class="price-tab-btn" onclick="switchPriceTab(this,'tabBagsShoes')">👜 Bags/Shoes</button>
+              <button class="price-tab-btn" onclick="switchPriceTab(this,'tabDye')">🎨 Dye</button>
+            </div>
+            <div class="price-tab-content active" id="tabDryClean">
+              <div class="info-box blue" style="margin-bottom:12px"><span class="info-box-icon">🧥</span><div><strong>Dry Clean w/ Iron</strong> — 20% e-payment discount</div></div>
+              <div class="pricing-scroll"><table class="pricing-table"><thead><tr><th>Item 項目</th><th>Price (HK$)</th></tr></thead><tbody>
+                <tr class="cat-row"><td colspan="2">👔 Gentleman / Lady 男女裝</td></tr>
+                <tr><td>Suit - 2 Pieces<span class="item-cn">西裝二件</span></td><td>$132.00up</td></tr>
+                <tr><td>Suit Jacket (Thin/Heavy)<span class="item-cn">西裝單杉（薄/厚）</span></td><td>$83/$101up</td></tr>
+                <tr><td>Long/Short Trousers<span class="item-cn">長/短西褲</span></td><td>$49/$47up</td></tr>
+                <tr><td>Vest w/ Collar<span class="item-cn">西裝背心/有領</span></td><td>$57/$69up</td></tr>
+                <tr><td>Branded Jeans<span class="item-cn">名牌牛仔褲</span></td><td>$72.00up</td></tr>
+                <tr><td>Shirt (Linen/Silk/Wool)<span class="item-cn">恤衫（麻/絲/羊毛）</span></td><td>$68/$83/$83up</td></tr>
+                <tr><td>Blouse<span class="item-cn">上衣</span></td><td>$83.00up</td></tr>
+                <tr><td>Sweater/Vest/Cardigan<span class="item-cn">冷衫/冷背心/冷外套</span></td><td>$83/$69/$99up</td></tr>
+                <tr><td>Cashmere Sweater/Coat<span class="item-cn">茄士咩毛衫/外套</span></td><td>$108/$132up</td></tr>
+                <tr><td>Sweater (Beaded)<span class="item-cn">釘珠毛衫</span></td><td>$119.00up</td></tr>
+                <tr><td>Gloves<span class="item-cn">冷手套</span></td><td>$70.00up</td></tr>
+                <tr><td>Tie<span class="item-cn">領呔</span></td><td>$55.00up</td></tr>
+                <tr class="cat-row"><td colspan="2">👗 Dress 西裙類</td></tr>
+                <tr><td>Fashion Skirt Short/Long<span class="item-cn">時款短/長西裙</span></td><td>$53/$69up</td></tr>
+                <tr><td>Skirt Full Pleats Short/Long<span class="item-cn">百摺短/長西裙</span></td><td>$97/$119up</td></tr>
+                <tr><td>Dress Plain (Sleeveless)<span class="item-cn">背心連身裙</span></td><td>$132.00up</td></tr>
+                <tr><td>Dress w/ Sleeves (Beaded)<span class="item-cn">連身裙（有裝飾/釘珠）</span></td><td>$141/$154up</td></tr>
+                <tr class="cat-row"><td colspan="2">🧥 Coat 外褸類</td></tr>
+                <tr><td>Jacket w/ Woollen Lining<span class="item-cn">夾棉/毛裡褸</span></td><td>$119/$132up</td></tr>
+                <tr><td>Down Jacket S/M/L/Vest<span class="item-cn">羽絨褸（短/中/長/背心）</span></td><td>$165/$220/$275/$132</td></tr>
+                <tr><td>Brand Down Jacket S/M/L/Vest<span class="item-cn">名牌羽絨褸</span></td><td>$248/$330/$413/$165</td></tr>
+                <tr><td>Sport Jacket Thin/Heavy<span class="item-cn">機恤/風褸</span></td><td>$108/$141up</td></tr>
+                <tr><td>Coat<span class="item-cn">短外褸</span></td><td>$119.00up</td></tr>
+                <tr><td>M-Jacket/Overcoat/Raincoat<span class="item-cn">中褸/大褸/乾濕褸</span></td><td>$174/$207/$255up</td></tr>
+                <tr><td>Morning Gown S/L<span class="item-cn">晨褸（短/長）</span></td><td>$116/$141up</td></tr>
+                <tr class="cat-row"><td colspan="2">📦 Other 其他</td></tr>
+                <tr><td>School Uniform<span class="item-cn">校服衫裙</span></td><td>$83/$108up</td></tr>
+                <tr><td>Cheongsam<span class="item-cn">長衫</span></td><td>$145.00up</td></tr>
+                <tr><td>Evening Dress<span class="item-cn">旗袍/晚禮服</span></td><td>$396-$523up</td></tr>
+                <tr><td>Wedding Dress<span class="item-cn">婚紗禮服</span></td><td>$946.00up</td></tr>
+                <tr class="cat-row"><td colspan="2">🏠 Household 家居 (DC)</td></tr>
+                <tr><td>Wool Blanket Single/Double<span class="item-cn">純羊毛氈</span></td><td>$193/$248up</td></tr>
+                <tr><td>Feather Quilt S/L/XL<span class="item-cn">羽絨被/絲棉被</span></td><td>$220/$275/$330up</td></tr>
+                <tr><td>Curtain/Sofa Cover (min 4lbs)<span class="item-cn">窗簾/梳化套</span></td><td>$52.00/lb up</td></tr>
+                <tr><td>Carpet Normal/Wool/Silk<span class="item-cn">地毯</span></td><td>$35/$48/$57/ft2</td></tr>
+              </tbody></table></div>
+            </div>
+            <div class="price-tab-content" id="tabLaundryIron">
+              <div class="info-box blue" style="margin-bottom:12px"><span class="info-box-icon">👔</span><div><strong>Laundry w/ Iron 濕洗連熨衣</strong> — 20% e-payment discount</div></div>
+              <div class="pricing-scroll"><table class="pricing-table"><thead><tr><th>Item 項目</th><th>Price (HK$)</th></tr></thead><tbody>
+                <tr class="cat-row"><td colspan="2">👔 Laundry Items 濕洗</td></tr>
+                <tr><td>Shirt Machine/Hand Iron<span class="item-cn">恤衫（機熨/手熨）</span></td><td>$42/$62up</td></tr>
+                <tr><td>Dinner Shirt<span class="item-cn">禮服恤衫</span></td><td>$86.00up</td></tr>
+                <tr><td>T-shirt/Polo<span class="item-cn">T恤/Polo恤</span></td><td>$66/$75up</td></tr>
+                <tr><td>Hoodie<span class="item-cn">衛衣</span></td><td>$113.00up</td></tr>
+                <tr><td>Pyjamas 2pc<span class="item-cn">睡衣二件</span></td><td>$100.00up</td></tr>
+                <tr><td>Overall Jeans<span class="item-cn">工人褲</span></td><td>$176.00up</td></tr>
+                <tr><td>Jeans Vest/Trousers<span class="item-cn">牛仔背心/褲</span></td><td>$66/$72up</td></tr>
+                <tr><td>Jeans Jacket/w Lining<span class="item-cn">牛仔褸/有毛裡</span></td><td>$105/$141up</td></tr>
+                <tr class="cat-row"><td colspan="2">🏠 Household 家居 (Laundry)</td></tr>
+                <tr><td>Stuffed Toy by area<span class="item-cn">毛/布公仔</span></td><td>$0.50/sq in</td></tr>
+                <tr><td>Bed Sheet/Duvet/Pillow Case<span class="item-cn">床單/被袋/枕袋</span></td><td>$44/$62/$22up</td></tr>
+                <tr><td>Pillow S/L/Dunlop<span class="item-cn">枕頭</span></td><td>$165/$207/$275up</td></tr>
+                <tr><td>Table Cloth 4ft x 4ft<span class="item-cn">檯布</span></td><td>$46.00up</td></tr>
+              </tbody></table></div>
+            </div>
+            <div class="price-tab-content" id="tabWeight">
+              <div class="info-box blue" style="margin-bottom:12px"><span class="info-box-icon">⚖️</span><div><strong>Wash by Weight 磅洗</strong> — No ironing. 20% e-payment discount</div></div>
+              <div class="pricing-scroll"><table class="pricing-table"><thead><tr><th>Item 項目</th><th>Price (HK$)</th></tr></thead><tbody>
+                <tr class="cat-row"><td colspan="2">⚖️ Wash by Weight</td></tr>
+                <tr><td>1-6 lbs (Min 6 lbs)<span class="item-cn">磅洗1-6磅</span></td><td>$56.00</td></tr>
+                <tr><td>Each Extra lb.<span class="item-cn">以後每磅加</span></td><td>$8.00/lb</td></tr>
+                <tr><td>High Temp Sterilize Blanket<span class="item-cn">高溫焗棉被/羽絨被</span></td><td>$97.00up</td></tr>
+                <tr><td>Towel Overlay min 4lbs<span class="item-cn">毛巾被</span></td><td>$26.00/lb up</td></tr>
+                <tr><td>Blanket min 4lbs<span class="item-cn">毛毯</span></td><td>$26.00/lb up</td></tr>
+                <tr><td>Big Blanket/Sleeping Bag<span class="item-cn">厚毛氈/睡袋</span></td><td>$33.00/lb up</td></tr>
+                <tr><td>Curtain No Iron min 4lbs<span class="item-cn">窗簾不包製</span></td><td>$26.00/lb up</td></tr>
+                <tr><td>Sofa/Bed Cover min 4lbs<span class="item-cn">梳化套/床笠</span></td><td>$26.00/lb up</td></tr>
+                <tr><td>Door Carpet min 4lbs<span class="item-cn">門口小地毯</span></td><td>$26.00/lb up</td></tr>
+              </tbody></table></div>
+            </div>
+            <div class="price-tab-content" id="tabLeather">
+              <div class="info-box red" style="margin-bottom:12px"><span class="info-box-icon">🚫</span><div><strong>Leather & Fur 皮草</strong> — No Discount 原價無折</div></div>
+              <div class="pricing-scroll"><table class="pricing-table"><thead><tr><th>Item 項目</th><th>Price (HK$)</th></tr></thead><tbody>
+                <tr class="cat-row"><td colspan="2">🧥 Leather & Fur</td></tr>
+                <tr class="no-disc"><td>Suede/Leather Jacket<span class="item-cn">狄皮或皮革外套</span></td><td>$800-$1,200up</td></tr>
+                <tr class="no-disc"><td>Suede/Leather Trousers<span class="item-cn">皮革西褲</span></td><td>$480-$800up</td></tr>
+                <tr class="no-disc"><td>Suede/Leather Vest/Skirt<span class="item-cn">皮革背心/短裙</span></td><td>$480-$800up</td></tr>
+                <tr class="no-disc"><td>Suede/Leather Overcoat<span class="item-cn">皮革大褸</span></td><td>$1,200-$1,800up</td></tr>
+                <tr class="no-disc"><td>Fur/Mink Vest/Cape<span class="item-cn">皮草/明克背心/披肩</span></td><td>$528/$748up</td></tr>
+                <tr class="no-disc"><td>Fur/Mink Jacket/Overcoat<span class="item-cn">皮草外套/大褸</span></td><td>$1,200-$1,800up</td></tr>
+                <tr class="no-disc"><td>Lambskin S/L/XL<span class="item-cn">羊皮</span></td><td>$308/$528/$748up</td></tr>
+                <tr class="no-disc"><td>Fox Cape S/L<span class="item-cn">原隻狐狸披肩</span></td><td>$748-$1,188up</td></tr>
+                <tr class="no-disc"><td>Leather Gloves<span class="item-cn">皮手套</span></td><td>$418.00up</td></tr>
+              </tbody></table></div>
+            </div>
+            <div class="price-tab-content" id="tabBagsShoes">
+              <div class="info-box red" style="margin-bottom:12px"><span class="info-box-icon">🚫</span><div><strong>Bags & Shoes 手袋/鞋</strong> — No Discount 原價無折</div></div>
+              <div class="pricing-scroll"><table class="pricing-table"><thead><tr><th>Item 項目</th><th>Price (HK$)</th></tr></thead><tbody>
+                <tr class="cat-row"><td colspan="2">👜 Handbags</td></tr>
+                <tr class="no-disc"><td>Wallet S/M/L<span class="item-cn">銀包</span></td><td>$418/$638/$858up</td></tr>
+                <tr class="no-disc"><td>Cotton Handbag w/ Leather Trim<span class="item-cn">布手袋有皮邊</span></td><td>$330/$528up</td></tr>
+                <tr class="no-disc"><td>Handbag<span class="item-cn">手袋</span></td><td>$418.00up</td></tr>
+                <tr class="no-disc"><td>Suede/Leather Handbag<span class="item-cn">真皮手袋</span></td><td>$858/$990up</td></tr>
+                <tr class="cat-row"><td colspan="2">👟 Shoes</td></tr>
+                <tr class="no-disc"><td>Leather Shoes/Heels/Boots<span class="item-cn">皮鞋/高跟鞋/皮靴</span></td><td>$858/$968/$1,320up</td></tr>
+                <tr class="no-disc"><td>Sports Shoes/Air-cushion<span class="item-cn">運動鞋/氣墊鞋</span></td><td>$242/$364up</td></tr>
+                <tr class="no-disc"><td>Slipper Fuzzy/Doll/Wool<span class="item-cn">睡拖</span></td><td>$75/$64/$253up</td></tr>
+              </tbody></table></div>
+            </div>
+            <div class="price-tab-content" id="tabDye">
+              <div class="info-box red" style="margin-bottom:12px"><span class="info-box-icon">🎨</span><div><strong>Color Dye 染色</strong> — No Discount. Price by quotation.</div></div>
+              <div class="pricing-scroll"><table class="pricing-table"><thead><tr><th>Item 項目</th><th>Price (HK$)</th></tr></thead><tbody>
+                <tr class="cat-row"><td colspan="2">🎨 Color Dye</td></tr>
+                <tr class="no-disc"><td>Furniture Cloth (1 Seat)<span class="item-cn">傢俬布藝</span></td><td>By Quote</td></tr>
+                <tr class="no-disc"><td>Shirt/Trousers<span class="item-cn">恤衫/西褲</span></td><td>By Quote</td></tr>
+                <tr class="no-disc"><td>Jacket/Coat<span class="item-cn">西裝褸/外套</span></td><td>By Quote</td></tr>
+                <tr class="no-disc"><td>Leather Jacket/Handbag<span class="item-cn">皮褸/皮手袋</span></td><td>By Quote</td></tr>
+                <tr class="no-disc"><td>Cloth Handbag<span class="item-cn">布手袋</span></td><td>By Quote</td></tr>
+              </tbody></table></div>
+            </div>
+
+            <!-- T&C -->
+            <div style="margin-top:16px; padding:16px; background:var(--gray-50); border-radius:10px; border:1px solid var(--gray-200);">
+              <strong style="font-size:14px; color:var(--primary-dark);">📜 乾洗•磅洗•熨衣服務、條款及細則</strong>
+              <div style="font-size:12px; color:var(--gray-400); margin-bottom:8px;">Dry-clean · Laundry · Ironing Services Terms & Conditions</div>
+              <ol class="terms-list">
+                <li class="no-disc">24小時特快乾洗及染色服務（原價無折）。<span class="term-en">No discount for 24 hours express service & Color Dyeing Service.</span></li>
+                <li class="no-disc">即日超特快乾洗服務，照洗衣價加100%及加速費$100～。<span class="term-en">Same Day Super Express Dry Clean Service, listed price +100% + $100 Courier.</span></li>
+                <li class="highlight">洗衣宅急便服務，每次最低消費＄300up-（敬請一天前預約）。<span class="term-en">Laundry Delivery Service, min $300up.- (Please make appointment a day before)</span></li>
+                <li>童裝/淨熨照價8折。<span class="term-en">Children & Ironing clothing 20% Off of the listed price.</span></li>
+                <li>摺裝服務，加收$2/件。<span class="term-en">Folding services, $2/each.</span></li>
+                <li>釘珠、絲/燈芯/厚絨、麻質加收30%服務費。<span class="term-en">Beaded, Velvet, Wool, Silk & Linen items 30% upcharge.</span></li>
+                <li>毛領/邊、帽及配飾，每款/件加＄10-$100不等（視乎大小）。<span class="term-en">Detachable Fur Collar, Trim, Hood & Accessories + $10 to $100/pcs (Depending on the size).</span></li>
+                <li class="no-disc">手袋、皮褸、鞋類原價無折。鞋類及手套均可單隻清洗。<span class="term-en">No discount for Handbags, Leather & Shoes Items. Single Shoes, Boots and Gloves can be washed.</span></li>
+                <li>深層起漬、嘔吐物或排泄物等起漬收費由$80至$200起不等，加速原價無折。<span class="term-en">Intensive Stain, Vomit Dirt, Excrement Remove Charges from $80 to $200 up. No discount for Expedite Service.</span></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAYMENT -->
+        <div class="accordion" id="accPayment">
+          <div class="accordion-header" onclick="toggleAccordion('accPayment')">
+            <span>💳 Payment 付款 — All E-Payments 20% OFF!</span><span class="acc-icon">▼</span>
+          </div>
+          <div class="accordion-body">
+            <div class="info-box green" style="margin-bottom:16px"><span class="info-box-icon">🎉</span><div><strong>20% Discount</strong> for ALL electronic payments on eligible services.</div></div>
+            <div class="info-box red" style="margin-bottom:16px"><span class="info-box-icon">🚫</span><div><strong>Cash NOT accepted. 不接受現金。</strong></div></div>
+            <div class="discount-card" onclick="selectPayment(this,'fps')"><span class="discount-icon">🏦</span><div class="discount-info"><h4>FPS 轉數快</h4><p>Instant bank transfer</p></div><span class="discount-badge">20% OFF</span></div>
+            <div class="discount-card" onclick="selectPayment(this,'payme')"><span class="discount-icon">💜</span><div class="discount-info"><h4>PayMe</h4><p>HSBC PayMe</p></div><span class="discount-badge">20% OFF</span></div>
+            <div class="discount-card" onclick="selectPayment(this,'alipay')"><span class="discount-icon">🔵</span><div class="discount-info"><h4>AlipayHK 支付寶</h4><p>Alipay Hong Kong</p></div><span class="discount-badge">20% OFF</span></div>
+            <div class="discount-card" onclick="selectPayment(this,'wechat')"><span class="discount-icon">🟢</span><div class="discount-info"><h4>WeChat Pay HK</h4><p>微信支付</p></div><span class="discount-badge">20% OFF</span></div>
+            <div class="discount-card" onclick="selectPayment(this,'credit_card')"><span class="discount-icon">💳</span><div class="discount-info"><h4>Credit Card 信用卡</h4><p>Visa, Mastercard, UnionPay</p></div><span class="discount-badge">20% OFF</span></div>
+            <div class="discount-card" onclick="selectPayment(this,'bank_transfer')"><span class="discount-icon">🏧</span><div class="discount-info"><h4>Bank Transfer 銀行轉賬</h4><p>Direct bank/ATM transfer</p></div><span class="discount-badge">20% OFF</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHOTO UPLOAD -->
+      <div style="margin-top:24px;">
+        <div class="card-title" style="font-size:17px;">📸 Upload Photos 上傳照片</div>
+        <p style="font-size:13px; color:var(--gray-500); margin-bottom:14px;">Optional. Max 8 photos, 10MB each.</p>
+        <div class="photo-upload-area" id="photoDropZone" onclick="document.getElementById('photoInput').click()">
+          <div class="photo-upload-icon">📷</div>
+          <div class="photo-upload-text">Click or drag photos here</div>
+          <div class="photo-upload-hint">JPG, PNG, HEIC — up to 8 photos</div>
+        </div>
+        <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(this.files)">
+        <div class="photo-count" id="photoCount"></div>
+        <div class="photo-preview-grid" id="photoPreviewGrid"></div>
+        <div id="photoInlineReminder" class="info-box yellow" style="display:none; margin-top:12px;">
+          <span class="info-box-icon">⚠️</span>
+          <div><strong>Important 重要提示：</strong>照片不會經WhatsApp連結自動傳送，請在提交訂單後手動發送照片至WhatsApp。<br>Photos will NOT be sent automatically via WhatsApp link. Please send them manually after submitting the order.</div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:20px;">
+        <label class="form-label">Special Instructions 特別要求</label>
+        <textarea class="form-textarea form-input" id="specialNotes" placeholder="e.g. Stain on collar, separate whites..."></textarea>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep(2)">Continue → Schedule Pickup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: SCHEDULE -->
+  <div class="section" id="step3">
+    <div class="card">
+      <div class="card-title">🚚 Pickup Schedule 收件安排</div>
+      <div class="card-subtitle">Select your preferred pickup date and time slot.</div>
+
+      <div class="info-box blue" id="cutoffNotice">
+        <span class="info-box-icon">🕐</span>
+        <div id="cutoffNoticeText">Loading...</div>
+      </div>
+      <div class="info-box teal" style="margin-top:-8px;">
+        <span class="info-box-icon">📌</span>
+        <div><strong>Service Hours 營業時間:</strong> Monday – Saturday（星期一至六）。Sunday closed 星期日休息。</div>
+      </div>
+
+      <div class="form-label" style="margin-bottom:10px; margin-top:8px;">📅 Pickup Date 收件日期 <span class="required">*</span></div>
+      <div class="quick-date-grid" id="quickDateGrid"></div>
+      <div id="customDateWrap" style="display:none; margin-bottom:16px;">
+        <input type="date" class="form-input" id="pickupDateInput" onchange="onCustomDatePicked(this.value)" style="max-width:280px;">
+      </div>
+      <div id="selectedDateDisplay" style="display:none; margin-bottom:16px; padding:14px 20px; background:linear-gradient(135deg,#e6f5f5,#d5eeef); border-radius:10px; border:1px solid #b2e0e0; text-align:center;">
+        <div style="font-size:13px; color:#0d5c5f; font-weight:500;">Selected Pickup Date 已選收件日期</div>
+        <div style="font-size:18px; font-weight:700; color:var(--primary-dark); margin-top:4px;" id="selectedDateText">—</div>
+      </div>
+
+      <div id="slotSection" style="display:none;">
+        <div class="form-label" style="margin-bottom:10px">⏰ Pickup Time Slot 收件時段 <span class="required">*</span></div>
+        <div class="slot-grid" id="slotGrid"></div>
+      </div>
+
+      <div id="slotError" class="info-box red" style="display:none; margin-top:8px;">
+        <span class="info-box-icon">⚠️</span><div>Please select both a date and a time slot. 請選擇日期及時段。</div>
+      </div>
+
+      <div class="admin-only driver-card" id="driverCard" style="margin-top:20px; display:none;">
+        <h4>🚐 司機自動分配 Driver Assignment</h4>
+        <div class="driver-detail-row"><span class="dr-icon">📍</span> 區域分類 Zone: <strong id="driverZoneText">—</strong></div>
+        <div class="driver-detail-row"><span class="dr-icon">👤</span> 分配司機 Driver: <strong id="driverNameText">—</strong> <span class="dr-badge" id="driverBadge" style="display:none">—</span></div>
+        <div class="driver-detail-row" id="driverBackupRow" style="display:none;"><span class="dr-icon">👥</span> 後備司機 Backup: <strong id="driverBackupText">—</strong> <span class="dr-badge backup">備用</span></div>
+        <div class="driver-detail-row"><span class="dr-icon">⏰</span> 時段 Slot: <span id="driverSlotText">—</span></div>
+      </div>
+
+      <div class="info-box green" id="minOrderInfo" style="margin-top:20px;">
+        <span class="info-box-icon">💰</span>
+        <div id="minOrderText">Loading...</div>
+      </div>
+
+      <div class="toggle-row">
+        <div class="toggle-info"><h4>🅿️ Parking Fee? 停車費？</h4><p>If parking is needed, the fee will be charged.</p></div>
+        <label class="toggle-switch"><input type="checkbox" id="parkingToggle" onchange="toggleParking()"><span class="toggle-slider"></span></label>
+      </div>
+      <div id="parkingFeeGroup" class="form-group" style="display:none; margin-top:12px;">
+        <label class="form-label">Estimated Parking Fee (HK$)</label>
+        <input type="number" class="form-input" id="parkingFee" value="0" min="0" onchange="updateStairsFee()" style="width:160px">
+      </div>
+
+      <div class="stairs-section">
+        <h4>🪜 Stairs Access 樓梯（無電梯）</h4>
+        <p style="font-size:13px; color:var(--gray-500); margin-bottom:4px">$10 per floor (一層兩段 = $10/層). Additional fees if no lift access.</p>
+        <div class="toggle-row" style="border:none; padding-top:0;">
+          <div class="toggle-info"><h4>Requires stairs? 需行樓梯？</h4></div>
+          <label class="toggle-switch"><input type="checkbox" id="stairsToggle" onchange="toggleStairs()"><span class="toggle-slider"></span></label>
+        </div>
+        <div id="stairsDetails" style="display:none; margin-top:14px;">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Number of Floors 樓層數目</label>
+              <input type="number" class="form-input" id="floorCount" value="0" min="0" onchange="updateStairsFee()" style="width:140px">
+              <div class="form-hint">e.g. 3/F = enter 3</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Trip Type 單程/來回</label>
+              <select class="form-select" id="tripType" onchange="updateStairsFee()">
+                <option value="one_way">One way 單程 — $10/floor</option>
+                <option value="round_trip">Round trip 來回 — $20/floor</option>
+              </select>
+            </div>
+          </div>
+          <div class="stairs-result" id="stairsResult">Stairs fee 樓梯費: HK$0</div>
+        </div>
+      </div>
+
+      <div class="btn-group" style="margin-top:24px">
+        <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep(3)">Continue → Review Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: REVIEW -->
+  <div class="section" id="step4">
+    <div class="card">
+      <div class="card-title">📝 Review Your Order 確認訂單</div>
+      <div class="card-subtitle">Please confirm all details before submitting.</div>
+
+      <div class="photo-warning-banner" id="photoWarningBanner" style="display:none;">
+        <span class="pw-icon">📸</span>
+        <div class="pw-title">PHOTO REMINDER 照片提醒</div>
+        <div class="pw-text">
+          您上傳了 <strong id="pwPhotoCount">0</strong> 張照片。照片不會經WhatsApp連結自動傳送！<br>
+          You uploaded <strong id="pwPhotoCount2">0</strong> photo(s). Photos will NOT be sent automatically via the WhatsApp link!
+        </div>
+        <div class="pw-note">提交訂單後，請手動將照片發送至WhatsApp 6629 1949。<br>After submitting, please manually send photos to WhatsApp 6629 1949.</div>
+      </div>
+
+      <div class="summary-section">
+        <h4>👤 Customer 顧客資料</h4>
+        <div class="summary-row"><span class="label">Name 姓名</span><span class="value" id="sumName">—</span></div>
+        <div class="summary-row"><span class="label">Phone 電話</span><span class="value" id="sumPhone">—</span></div>
+        <div class="summary-row"><span class="label">Email 電郵</span><span class="value" id="sumEmail">—</span></div>
+        <div class="summary-row"><span class="label">Pickup Address 取衣地址</span><span class="value" id="sumAddress" style="text-align:right; max-width:55%">—</span></div>
+        <div class="summary-row"><span class="label">Delivery Address 送回地址</span><span class="value" id="sumDeliveryAddr" style="text-align:right; max-width:55%">—</span></div>
+        <div class="summary-row"><span class="label">Area 地區</span><span class="value" id="sumArea">—</span></div>
+      </div>
+      <div class="summary-section">
+        <h4>🧺 Services & Schedule 服務及安排</h4>
+        <div id="sumServices"></div>
+        <div class="summary-divider"></div>
+        <div class="summary-row"><span class="label">Pickup 收件</span><span class="value" id="sumPickup" style="color:var(--accent)">—</span></div>
+        <div class="summary-row" id="sumPaymentRow" style="display:none"><span class="label">Payment 付款</span><span class="value" id="sumPayment">—</span></div>
+        <div id="sumNotesRow" class="summary-row" style="display:none"><span class="label">Notes 備註</span><span class="value" id="sumNotes" style="text-align:right; max-width:60%; font-weight:400; font-size:13px">—</span></div>
+      </div>
+
+      <div class="admin-only summary-section" id="sumDriverSection" style="background:linear-gradient(135deg,var(--primary-light),#dce0f3); border:1px solid #8a9ad4;">
+        <h4 style="color:var(--primary-dark)">🚐 Driver Assignment 司機分配</h4>
+        <div class="summary-row"><span class="label">Zone 區域</span><span class="value" id="sumDriverZone">—</span></div>
+        <div class="summary-row"><span class="label">Driver 司機</span><span class="value" id="sumDriverName" style="color:var(--primary)">—</span></div>
+        <div class="summary-row" id="sumDriverBackupRow" style="display:none"><span class="label">Backup 後備</span><span class="value" id="sumDriverBackup" style="color:var(--warning)">—</span></div>
+        <div class="summary-row"><span class="label">Slot 時段</span><span class="value" id="sumDriverSlot">—</span></div>
+      </div>
+
+      <div class="summary-section" id="sumPhotoSection" style="display:none">
+        <h4>📸 Photos 照片</h4>
+        <div class="sum-photos" id="sumPhotos"></div>
+      </div>
+      <div class="summary-section">
+        <h4>💰 Fees 費用</h4>
+        <div class="summary-row"><span class="label">Min Order 最低消費</span><span class="value" id="sumMinOrder">—</span></div>
+        <div class="summary-row" id="sumMinOrderNote"><span class="label" style="font-size:12px; color:var(--gray-400);" id="sumMinOrderNoteText"></span></div>
+        <div class="summary-row" id="sumParkingRow" style="display:none"><span class="label">Parking Fee 停車費</span><span class="value" id="sumParking">—</span></div>
+        <div class="summary-row" id="sumStairsRow" style="display:none"><span class="label">Stairs Fee 樓梯費</span><span class="value" id="sumStairs">—</span></div>
+        <div class="summary-row" id="sumDiscountRow" style="display:none"><span class="label">E-Payment Discount 電子支付折扣</span><span class="value" id="sumDiscount" style="color:var(--success)">—</span></div>
+        <div class="summary-divider"></div>
+        <div class="summary-row"><span class="label" style="font-size:13px; color:var(--gray-400)">* Final charges after pickup assessment. 最終費用將在取衣評估後確認。</span></div>
+      </div>
+      <div class="info-box yellow">
+        <span class="info-box-icon">📌</span>
+        <div><strong>Note 注意:</strong> Final charges confirmed after item assessment. 最終費用將在取衣評估後確認。</div>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+        <button class="btn btn-whatsapp btn-block" onclick="submitOrder('whatsapp')" style="flex:2">📱 Submit via WhatsApp</button>
+      </div>
+      <div style="text-align:center; margin-top:12px">
+        <button class="btn btn-primary btn-block" onclick="submitOrder('email')">✉️ Submit via Email</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5: SUCCESS -->
+  <div class="section" id="step5">
+    <div class="card">
+      <div class="success-screen">
+        <div class="success-icon">✅</div>
+        <h2>Order Submitted! 訂單已提交！</h2>
+        <p>We'll confirm your pickup shortly via WhatsApp. 我們會盡快透過WhatsApp確認收件安排。</p>
+        <div class="order-number" id="orderNumber">Order #—</div>
+        <div id="photoReminder" class="photo-warning-banner" style="display:none; margin-bottom:20px;">
+          <span class="pw-icon">📸</span>
+          <div class="pw-title">PLEASE SEND YOUR PHOTOS NOW 請立即發送照片</div>
+          <div class="pw-text">
+            您有 <strong id="photoReminderCount">0</strong> 張照片需手動發送至 WhatsApp 6629 1949。<br>
+            Please send your <strong id="photoReminderCount2">0</strong> photo(s) to WhatsApp 6629 1949 now.
+          </div>
+        </div>
+        <div id="successDetails" style="text-align:left; margin-bottom:24px"></div>
+        <button class="btn btn-primary btn-block" onclick="resetForm()">📦 Place Another Order 再下一張訂單</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ADMIN FLOAT BUTTON -->
+<button class="admin-float-btn" id="adminToggleBtn" onclick="showPinModal()" title="Admin Panel">🔐</button>
+<div class="admin-indicator" id="adminIndicator">🔓 ADMIN MODE</div>
+
+<!-- ADMIN SCHEDULE PANEL -->
+<div class="admin-schedule-panel" id="adminPanel">
+  <button class="admin-panel-close" onclick="closeAdminPanel()">✕</button>
+  <h3>📋 今日司機排班表 Driver Schedule</h3>
+  <div id="adminScheduleContent"></div>
+  <div style="margin-top:20px; padding-top:16px; border-top:2px solid var(--gray-200);">
+    <button class="btn btn-secondary btn-block" onclick="closeAdminPanel()">Close 關閉</button>
+    <button class="btn btn-block" style="margin-top:8px; background:var(--danger); color:white;" onclick="exitAdminMode()">🔒 Exit Admin Mode</button>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <h3 id="modalTitle">Notice</h3>
+    <p id="modalMessage">Something happened.</p>
+    <button class="btn btn-primary" onclick="closeModal()">OK</button>
+  </div>
+</div>
+<div class="modal-overlay" id="pinModal">
+  <div class="modal-box pin-modal-box">
+    <h3>🔐 Admin Login 後台登入</h3>
+    <p>Enter PIN to access admin features.</p>
+    <input type="password" class="pin-input" id="pinInput" maxlength="4" placeholder="••••" onkeyup="if(event.key==='Enter')verifyPin()">
+    <div class="pin-error" id="pinError">Wrong PIN. Try again.</div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn btn-secondary" onclick="closePinModal()" style="flex:1">Cancel</button>
+      <button class="btn btn-primary" onclick="verifyPin()" style="flex:1">Login</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================================================================
+   CONFIG — ← CHANGE 1: Added GOOGLE_SHEET_URL
+   ================================================================ */
+const CONFIG = {
+  WHATSAPP_NUMBER: '85266291949',
+  EMAIL_ADDRESS: 'orders@sunshinelaundry.com.hk',
+  ADMIN_PIN: '1949',
+  CUTOFF_HOUR: 11,
+  MIN_ORDER_NORMAL: 300,
+  MIN_ORDER_REMOTE: 500,
+  GOOGLE_SHEET_URL: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec'  /* ← CHANGE 1: Replace YOUR_SCRIPT_ID_HERE with your deployed Apps Script URL */
+};
+
+/* ================================================================
+   DISTRICT ZONES
+   ================================================================ */
+const DISTRICT_ZONES = {
+  hk_wanchai_central: ['central','sheung_wan','sai_ying_pun','kennedy_town','wanchai','causeway_bay','happy_valley','mid_levels','the_peak'],
+  hk_east: ['north_point','quarry_bay','tai_koo','sai_wan_ho','shau_kei_wan','chai_wan','siu_sai_wan','heng_fa_chuen'],
+  hk_south: ['pok_fu_lam','aberdeen','ap_lei_chau','wong_chuk_hang','repulse_bay','stanley','shek_o'],
+  kowloon: ['tsim_sha_tsui','jordan','yau_ma_tei','mong_kok','prince_edward','sham_shui_po','cheung_sha_wan','lai_chi_kok','mei_foo','kowloon_tong','kowloon_city','ho_man_tin','to_kwa_wan','hung_hom','kwun_tong','ngau_tau_kok','diamond_hill','wong_tai_sin','san_po_kong','lam_tin','yau_tong'],
+  nt_west: ['tsuen_wan','kwai_fong','kwai_chung','tsing_yi','tuen_mun','yuen_long','tin_shui_wai'],
+  nt_east: ['sheung_shui','fanling','tai_po','sha_tin','fo_tan','ma_on_shan','tai_wai','tseung_kwan_o','sai_kung'],
+  special: ['tung_chung','discovery_bay']
+};
+
+const ZONE_NAMES = {
+  hk_wanchai_central: '港島灣仔區-中西區',
+  hk_east: '港島東',
+  hk_south: '港島南',
+  kowloon: '九龍',
+  nt_west: '新界西',
+  nt_east: '新界東',
+  special: '特別區域（東涌/愉景灣）'
+};
+
+/* ================================================================
+   DRIVER SCHEDULE
+   ================================================================ */
+const DRIVER_SCHEDULE = {
+  slotA: {
+    id:'slotA', time:'08:00 - 10:00', label:'早上 Morning', icon:'🌅', available:true,
+    assignments: {
+      hk_wanchai_central: { primary:['阿英'], backup:'謙仔' },
+      hk_east:            { primary:['田雞'], backup:'謙仔' },
+      hk_south:           { primary:['細'],   backup:'謙仔' },
+      kowloon:            { primary:['豬潤','阿智','阿達'], backup:null },
+      nt_west:            { primary:['阿勇'], backup:null },
+      nt_east:            { primary:['阿勇'], backup:null },
+      special:            { primary:['阿勇'], backup:null }
+    },
+    overrides: {}
+  },
+  slotB: {
+    id:'slotB', time:'10:00 - 13:00', label:'午休 Break', icon:'🚫', available:false
+  },
+  slotC: {
+    id:'slotC', time:'13:00 - 17:00', label:'下午 Afternoon', icon:'☀️', available:true,
+    assignments: {
+      hk_wanchai_central: { primary:['權哥'], backup:null },
+      hk_east:            { primary:['權哥'], backup:null },
+      hk_south:           { primary:['權哥'], backup:null },
+      kowloon:            { primary:['豬潤','阿智','阿達'], backup:null },
+      nt_west:            { primary:['阿葉'], backup:null },
+      nt_east:            { primary:['阿勇','謙仔'], backup:null },
+      special:            { primary:['阿勇','謙仔'], backup:null }
+    },
+    overrides: {
+      'tsuen_wan': { primary:['豬潤','阿智','阿達'], backup:null }
+    }
+  },
+  slotD: {
+    id:'slotD', time:'18:00 - 22:00', label:'晚上 Evening', icon:'🌙', available:true,
+    assignments: {
+      hk_wanchai_central: { primary:['阿偉','阿喬'], backup:null },
+      hk_east:            { primary:['阿偉','阿喬'], backup:null },
+      hk_south:           { primary:['阿偉','阿喬'], backup:null },
+      kowloon:            { primary:['阿偉','阿喬'], backup:null },
+      nt_west:            { primary:['阿偉','阿喬'], backup:null },
+      nt_east:            { primary:['阿偉','阿喬'], backup:null },
+      special:            { primary:['阿偉','阿喬'], backup:null }
+    },
+    overrides: {}
+  },
+  slotSpecial: {
+    id:'slotSpecial', time:'09:00 - 12:00', label:'特別 Special (東涌/愉景灣)', icon:'✈️', available:true,
+    specialOnly:true,
+    assignments: {
+      special: { primary:['Martin'], backup:null }
+    },
+    overrides: {}
+  }
+};
+
+const SERVICE_INFO = {
+  dry_clean:          { name:'乾洗連熨衣 Dry Clean w/ Iron', nameCN:'乾洗連熨衣', nameEN:'Dry Clean w/ Iron', days:7, discountable:true },
+  laundry_iron:       { name:'濕洗連熨衣 Laundry w/ Iron', nameCN:'濕洗連熨衣', nameEN:'Laundry w/ Iron', days:5, discountable:true },
+  laundry_weight:     { name:'磅洗 Wash by Weight', nameCN:'磅洗', nameEN:'Wash by Weight', days:5, discountable:true },
+  bags_shoes_leather: { name:'手袋/鞋/皮草 Bags/Shoes/Leather/Fur', nameCN:'手袋/鞋/皮草', nameEN:'Bags/Shoes/Leather/Fur', days:20, discountable:false },
+  color_dye:          { name:'染色 Color Dye', nameCN:'染色', nameEN:'Color Dye', days:25, discountable:false }
+};
+
+const PAYMENT_METHODS = {
+  fps:           { name:'FPS 轉數快', nameCN:'轉數快 FPS', discount:20 },
+  payme:         { name:'PayMe', nameCN:'PayMe', discount:20 },
+  alipay:        { name:'AlipayHK 支付寶', nameCN:'支付寶 AlipayHK', discount:20 },
+  wechat:        { name:'WeChat Pay HK 微信支付', nameCN:'微信支付 WeChat Pay', discount:20 },
+  credit_card:   { name:'Credit Card 信用卡', nameCN:'信用卡 Credit Card', discount:20 },
+  bank_transfer: { name:'Bank Transfer 銀行轉賬', nameCN:'銀行轉賬 Bank Transfer', discount:20 }
+};
+
+/* ================================================================
+   APP STATE
+   ================================================================ */
+let currentStep = 1;
+let selectedServices = new Set();
+let selectedPayment = null;
+let selectedDate = null;
+let selectedSlot = null;
+let uploadedPhotos = [];
+let driverResult = null;
+let adminMode = false;
+let orderData = {};
+
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+function goToStep(step) { if (step <= currentStep) showStep(step); }
+
+function nextStep(from) {
+  if (from === 1 && !validateStep1()) return;
+  if (from === 2 && !validateStep2()) return;
+  if (from === 3 && !validateStep3()) return;
+  if (from === 3) buildSummary();
+  showStep(from + 1);
+}
+
+function prevStep(from) { showStep(from - 1); }
+
+function showStep(step) {
+  currentStep = step;
+  for (let i = 1; i <= 5; i++) document.getElementById('step' + i).classList.toggle('active', i === step);
+  updateProgress();
+  if (step === 3) initScheduleStep();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress() {
+  const steps = document.querySelectorAll('.progress-step');
+  const conns = document.querySelectorAll('.progress-connector');
+  steps.forEach(function(el, i) {
+    const n = i + 1;
+    el.classList.remove('active','completed');
+    if (n === currentStep) el.classList.add('active');
+    else if (n < currentStep) el.classList.add('completed');
+  });
+  conns.forEach(function(el, i) { el.classList.toggle('active', i + 1 < currentStep); });
+}
+
+/* ================================================================
+   VALIDATION
+   ================================================================ */
+function validateStep1() {
+  let ok = true;
+  const name = gv('customerName'), phone = gv('customerPhone'), addr = gv('customerAddress'), area = document.getElementById('customerArea').value;
+  toggleError('fg-name', !name); if (!name) ok = false;
+  toggleError('fg-phone', !phone || phone.length < 6); if (!phone || phone.length < 6) ok = false;
+  toggleError('fg-address', !addr); if (!addr) ok = false;
+  toggleError('fg-area', !area); if (!area) ok = false;
+  if (!ok) showModal('Missing Information 資料不完整', 'Please fill in all required fields. 請填寫所有必填欄位。');
+  return ok;
+}
+
+function validateStep2() {
+  if (selectedServices.size === 0) { document.getElementById('serviceError').style.display = 'flex'; return false; }
+  document.getElementById('serviceError').style.display = 'none';
+  return true;
+}
+
+function validateStep3() {
+  if (!selectedDate || !selectedSlot) {
+    document.getElementById('slotError').style.display = 'flex';
+    showModal('Missing Schedule 未選日期時段', 'Please select both a pickup date and time slot. 請選擇日期及時段。');
+    return false;
+  }
+  document.getElementById('slotError').style.display = 'none';
+  return true;
+}
+
+function toggleError(id, show) { var el = document.getElementById(id); if (el) el.classList.toggle('error', show); }
+
+/* ================================================================
+   SERVICE SELECTION
+   ================================================================ */
+function toggleService(el, serviceId) {
+  el.classList.toggle('selected');
+  if (selectedServices.has(serviceId)) selectedServices.delete(serviceId);
+  else selectedServices.add(serviceId);
+  document.getElementById('serviceError').style.display = 'none';
+}
+
+/* ================================================================
+   PAYMENT
+   ================================================================ */
+function selectPayment(el, paymentId) {
+  document.querySelectorAll('.discount-card').forEach(function(c) { c.classList.remove('selected'); });
+  if (selectedPayment === paymentId) { selectedPayment = null; }
+  else { el.classList.add('selected'); selectedPayment = paymentId; }
+}
+
+/* ================================================================
+   AREA LOGIC
+   ================================================================ */
+function onAreaChange() {
+  var opt = document.getElementById('customerArea').options[document.getElementById('customerArea').selectedIndex];
+  var isRemote = opt && opt.getAttribute('data-remote') === 'true';
+  document.getElementById('remoteAreaNotice').style.display = isRemote ? 'flex' : 'none';
+  if (currentStep === 3) { renderSlots(); runDriverAssignment(); }
+}
+
+function getDistrictZone(districtValue) {
+  for (var zone in DISTRICT_ZONES) {
+    if (DISTRICT_ZONES[zone].indexOf(districtValue) !== -1) return zone;
+  }
+  return null;
+}
+
+function isRemoteArea() { return ['tung_chung','discovery_bay'].indexOf(document.getElementById('customerArea').value) !== -1; }
+function getMinOrder() { return isRemoteArea() ? CONFIG.MIN_ORDER_REMOTE : CONFIG.MIN_ORDER_NORMAL; }
+function getSelectedDistrict() { return document.getElementById('customerArea').value; }
+
+/* ================================================================
+   DATE & TIME SLOT
+   ================================================================ */
+function isSunday(dateStr) {
+  return new Date(dateStr + 'T00:00:00').getDay() === 0;
+}
+
+function canPickupToday() {
+  var now = new Date();
+  return now.getHours() < CONFIG.CUTOFF_HOUR && !isSunday(getTodayStr());
+}
+
+function getTodayStr() { return dateToStr(new Date()); }
+
+function getDateOffset(days) {
+  var d = new Date();
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+function dateToStr(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function formatDateNice(dateStr) {
+  var d = new Date(dateStr + 'T00:00:00');
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var daysCN = ['日','一','二','三','四','五','六'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[d.getDay()] + '(' + daysCN[d.getDay()] + ') ' + d.getDate() + ' ' + months[d.getMonth()];
+}
+
+function formatDateFull(dateStr) {
+  var d = new Date(dateStr + 'T00:00:00');
+  var days = ['Sunday 星期日','Monday 星期一','Tuesday 星期二','Wednesday 星期三','Thursday 星期四','Friday 星期五','Saturday 星期六'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function formatDatePlain(dateStr) {
+  var d = new Date(dateStr + 'T00:00:00');
+  var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var daysCN = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return days[d.getDay()] + ' ' + daysCN[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function isToday(dateStr) { return dateStr === getTodayStr(); }
+
+function getAvailableSlots(dateStr, district) {
+  var zone = getDistrictZone(district);
+  var isSpecialArea = (zone === 'special');
+  var today = isToday(dateStr);
+  var slots = [];
+
+  if (today) {
+    var hour = new Date().getHours();
+    if (hour < 16) slots.push('slotC');
+    if (hour < 21) slots.push('slotD');
+    if (isSpecialArea && hour < 11) slots.push('slotSpecial');
+  } else {
+    slots.push('slotA', 'slotC', 'slotD');
+    if (isSpecialArea) slots.push('slotSpecial');
+  }
+  return slots;
+}
+
+function initScheduleStep() {
+  updateCutoffNotice();
+  renderDateButtons();
+  var min = getMinOrder();
+  document.getElementById('minOrderText').innerHTML =
+    '<strong>Minimum Order 最低消費: HK$' + min + '</strong><br>' +
+    '如訂單未達最低消費 $' + min + '，仍會收取 $' + min + ' 的最低消費費用。<br>' +
+    '<span style="font-size:12px">If your order does not meet the $' + min + ' minimum, you will still be charged the $' + min + ' minimum order fee.</span>';
+  if (selectedDate) {
+    document.getElementById('selectedDateDisplay').style.display = 'block';
+    document.getElementById('selectedDateText').textContent = formatDateFull(selectedDate);
+    document.getElementById('slotSection').style.display = 'block';
+    renderSlots();
+    runDriverAssignment();
+  }
+}
+
+function updateCutoffNotice() {
+  var ct = document.getElementById('cutoffNoticeText');
+  if (canPickupToday()) {
+    ct.innerHTML = '<strong>截單時間 Cutoff: 今日 ' + CONFIG.CUTOFF_HOUR + ':00 AM</strong><br>' +
+      '現在落單 → 最早可選今日下午收件<br>' +
+      '<span style="font-size:12px">Order before ' + CONFIG.CUTOFF_HOUR + 'AM = same-day afternoon pickup available</span>';
+  } else {
+    ct.innerHTML = '<strong>今日截單時間已過 Past ' + CONFIG.CUTOFF_HOUR + ':00 AM</strong><br>' +
+      '現在落單 → 最早可選明日收件<br>' +
+      '<span style="font-size:12px">Order after ' + CONFIG.CUTOFF_HOUR + 'AM = earliest pickup is tomorrow</span>';
+  }
+}
+
+function renderDateButtons() {
+  var grid = document.getElementById('quickDateGrid');
+  grid.innerHTML = '';
+
+  var canToday = canPickupToday();
+  var todayStr = getTodayStr();
+  var tomStr = dateToStr(getDateOffset(1));
+  var dayAfterStr = dateToStr(getDateOffset(2));
+
+  var buttons = [
+    {
+      dateStr: todayStr, icon: '⚡', label: 'Today 今天',
+      dateDisplay: formatDateNice(todayStr),
+      disabled: !canToday || isSunday(todayStr),
+      noteText: isSunday(todayStr) ? '休息日 Closed' : (!canToday ? '已截單 Cutoff' : '可選'),
+      noteClass: isSunday(todayStr) || !canToday ? 'red' : 'green'
+    },
+    {
+      dateStr: tomStr, icon: '📅', label: 'Tomorrow 明天',
+      dateDisplay: formatDateNice(tomStr),
+      disabled: isSunday(tomStr),
+      noteText: isSunday(tomStr) ? '休息日 Closed' : '',
+      noteClass: 'red'
+    },
+    {
+      dateStr: dayAfterStr, icon: '📅', label: 'Day After 後天',
+      dateDisplay: formatDateNice(dayAfterStr),
+      disabled: isSunday(dayAfterStr),
+      noteText: isSunday(dayAfterStr) ? '休息日 Closed' : '',
+      noteClass: 'red'
+    },
+    {
+      dateStr: '__custom__', icon: '🗓️', label: 'Pick Date 自選',
+      dateDisplay: 'Choose on calendar', disabled: false, noteText: '', noteClass: ''
+    }
+  ];
+
+  buttons.forEach(function(b) {
+    var isSelected = selectedDate === b.dateStr || (b.dateStr === '__custom__' && selectedDate && selectedDate !== todayStr && selectedDate !== tomStr && selectedDate !== dayAfterStr);
+    var div = document.createElement('div');
+    div.className = 'date-btn' + (b.disabled ? ' disabled' : '') + (isSelected ? ' selected' : '');
+    div.setAttribute('data-datestr', b.dateStr);
+    var noteHTML = b.noteText ? '<div class="db-note ' + b.noteClass + '">' + b.noteText + '</div>' : '';
+    div.innerHTML =
+      '<div class="db-icon">' + b.icon + '</div>' +
+      '<div class="db-label">' + b.label + '</div>' +
+      '<div class="db-date">' + b.dateDisplay + '</div>' +
+      noteHTML;
+    grid.appendChild(div);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('quickDateGrid').addEventListener('click', function(e) {
+    var btn = e.target.closest('.date-btn');
+    if (!btn || btn.classList.contains('disabled')) return;
+    var dateStr = btn.getAttribute('data-datestr');
+    if (!dateStr) return;
+
+    if (dateStr === '__custom__') {
+      document.getElementById('customDateWrap').style.display = 'block';
+      var minDate = canPickupToday() ? getTodayStr() : dateToStr(getDateOffset(1));
+      var picker = document.getElementById('pickupDateInput');
+      picker.setAttribute('min', minDate);
+      picker.focus();
+      document.querySelectorAll('#quickDateGrid .date-btn').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+    } else {
+      document.getElementById('customDateWrap').style.display = 'none';
+      selectPickupDate(dateStr);
+    }
+  });
+});
+
+function onCustomDatePicked(value) {
+  if (!value) return;
+  if (isSunday(value)) {
+    showModal('星期日休息 Sunday Closed', '星期日不設服務，請選擇星期一至六。Sorry, we do not provide service on Sundays. Please choose Monday to Saturday.');
+    document.getElementById('pickupDateInput').value = '';
+    return;
+  }
+  selectPickupDate(value);
+}
+
+function selectPickupDate(dateStr) {
+  selectedDate = dateStr;
+  selectedSlot = null;
+  driverResult = null;
+  renderDateButtons();
+  document.getElementById('selectedDateDisplay').style.display = 'block';
+  document.getElementById('selectedDateText').textContent = formatDateFull(dateStr);
+  document.getElementById('slotSection').style.display = 'block';
+  renderSlots();
+  updateDriverCard();
+  document.getElementById('slotError').style.display = 'none';
+}
+
+function renderSlots() {
+  var grid = document.getElementById('slotGrid');
+  grid.innerHTML = '';
+  if (!selectedDate) return;
+
+  var district = getSelectedDistrict();
+  var availableSlots = getAvailableSlots(selectedDate, district);
+  var zone = getDistrictZone(district);
+
+  var displaySlots = ['slotA', 'slotC', 'slotD'];
+  if (zone === 'special') displaySlots.push('slotSpecial');
+
+  displaySlots.forEach(function(slotId) {
+    var schedule = DRIVER_SCHEDULE[slotId];
+    if (!schedule) return;
+    var isAvailable = availableSlots.indexOf(slotId) !== -1;
+    var isSelected = selectedSlot === slotId;
+
+    var div = document.createElement('div');
+    div.className = 'slot-card' +
+      (isSelected ? ' selected' : '') +
+      (!isAvailable ? ' disabled' : '') +
+      (slotId === 'slotSpecial' ? ' special-slot' : '');
+    div.setAttribute('data-slot', slotId);
+
+    var noteText = '';
+    if (!isAvailable && isToday(selectedDate)) noteText = '時段已過 Passed';
+    if (!isAvailable && !isToday(selectedDate) && slotId === 'slotSpecial') noteText = '僅限東涌/愉景灣';
+    if (slotId === 'slotSpecial' && isAvailable) noteText = '僅限東涌/愉景灣';
+
+    div.innerHTML =
+      '<div class="sc-icon">' + schedule.icon + '</div>' +
+      '<div class="sc-label">' + schedule.label + '</div>' +
+      '<div class="sc-time">' + schedule.time + '</div>' +
+      (noteText ? '<div class="sc-note">' + noteText + '</div>' : '');
+
+    grid.appendChild(div);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('slotGrid').addEventListener('click', function(e) {
+    var card = e.target.closest('.slot-card');
+    if (!card || card.classList.contains('disabled')) return;
+    var slotId = card.getAttribute('data-slot');
+    if (!slotId) return;
+
+    selectedSlot = slotId;
+    document.querySelectorAll('#slotGrid .slot-card').forEach(function(c) { c.classList.remove('selected'); });
+    card.classList.add('selected');
+    runDriverAssignment();
+    document.getElementById('slotError').style.display = 'none';
+  });
+});
+
+/* ================================================================
+   DRIVER ASSIGNMENT
+   ================================================================ */
+function assignDriver(slotId, district) {
+  var zone = getDistrictZone(district);
+  if (!zone) return { driver:'N/A', backup:null, zone:null, zoneName:'未知區域', slotLabel:'--' };
+
+  var schedule = DRIVER_SCHEDULE[slotId];
+  if (!schedule || !schedule.available) return { driver:'此時段不接單', backup:null, zone:zone, zoneName:ZONE_NAMES[zone], slotLabel:'不可用' };
+
+  var slotLabel = schedule.label + ' ' + schedule.time;
+
+  if (schedule.overrides && schedule.overrides[district]) {
+    var ov = schedule.overrides[district];
+    return { driver:pickRandom(ov.primary), backup:ov.backup, zone:zone, zoneName:ZONE_NAMES[zone], slotLabel:slotLabel };
+  }
+
+  var assignment = schedule.assignments ? schedule.assignments[zone] : null;
+  if (!assignment) return { driver:'N/A', backup:null, zone:zone, zoneName:ZONE_NAMES[zone], slotLabel:slotLabel };
+
+  return { driver:pickRandom(assignment.primary), backup:assignment.backup || null, zone:zone, zoneName:ZONE_NAMES[zone], slotLabel:slotLabel };
+}
+
+function runDriverAssignment() {
+  if (!selectedSlot || !getSelectedDistrict()) { driverResult = null; updateDriverCard(); return; }
+  driverResult = assignDriver(selectedSlot, getSelectedDistrict());
+  updateDriverCard();
+}
+
+function updateDriverCard() {
+  var card = document.getElementById('driverCard');
+  if (!driverResult) { card.style.display = 'none'; return; }
+
+  document.getElementById('driverZoneText').textContent = driverResult.zoneName || '--';
+  document.getElementById('driverNameText').textContent = driverResult.driver || '--';
+  document.getElementById('driverSlotText').textContent = driverResult.slotLabel || '--';
+
+  var badge = document.getElementById('driverBadge');
+  if (driverResult.driver && driverResult.driver !== 'N/A') {
+    badge.textContent = '已分配'; badge.style.display = 'inline-block';
+  } else { badge.style.display = 'none'; }
+
+  var backupRow = document.getElementById('driverBackupRow');
+  if (driverResult.backup) {
+    backupRow.style.display = 'flex';
+    document.getElementById('driverBackupText').textContent = driverResult.backup;
+  } else { backupRow.style.display = 'none'; }
+
+  card.style.display = '';
+}
+
+/* ================================================================
+   PARKING & STAIRS
+   ================================================================ */
+function toggleParking() {
+  var show = document.getElementById('parkingToggle').checked;
+  document.getElementById('parkingFeeGroup').style.display = show ? 'block' : 'none';
+  if (!show) document.getElementById('parkingFee').value = 0;
+}
+
+function toggleStairs() {
+  var show = document.getElementById('stairsToggle').checked;
+  document.getElementById('stairsDetails').style.display = show ? 'block' : 'none';
+  if (!show) { document.getElementById('floorCount').value = 0; updateStairsFee(); }
+}
+
+function getStairsFee() {
+  if (!document.getElementById('stairsToggle').checked) return 0;
+  var floors = parseInt(document.getElementById('floorCount').value) || 0;
+  var rate = document.getElementById('tripType').value === 'round_trip' ? 20 : 10;
+  return floors * rate;
+}
+
+function getParkingFee() {
+  if (!document.getElementById('parkingToggle').checked) return 0;
+  return parseInt(document.getElementById('parkingFee').value) || 0;
+}
+
+function updateStairsFee() {
+  var fee = getStairsFee();
+  var floors = parseInt(document.getElementById('floorCount').value) || 0;
+  var trip = document.getElementById('tripType').value === 'round_trip' ? '來回 Round trip' : '單程 One way';
+  document.getElementById('stairsResult').textContent = 'Stairs fee 樓梯費: HK$' + fee + ' (' + floors + ' floor(s), ' + trip + ')';
+}
+
+/* ================================================================
+   PHOTO UPLOAD
+   ================================================================ */
+var dropZone = document.getElementById('photoDropZone');
+dropZone.addEventListener('dragover', function(e) { e.preventDefault(); this.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', function(e) { e.preventDefault(); this.classList.remove('dragover'); });
+dropZone.addEventListener('drop', function(e) { e.preventDefault(); this.classList.remove('dragover'); handlePhotoUpload(e.dataTransfer.files); });
+
+function handlePhotoUpload(files) {
+  var max = 8, maxSize = 10 * 1024 * 1024;
+  for (var i = 0; i < files.length; i++) {
+    if (uploadedPhotos.length >= max) { showModal('Max Photos', 'Maximum ' + max + ' photos.'); break; }
+    var f = files[i];
+    if (!f.type.startsWith('image/')) continue;
+    if (f.size > maxSize) { showModal('File Too Large', f.name + ' exceeds 10MB.'); continue; }
+    (function(file) {
+      var reader = new FileReader();
+      reader.onload = function(e) { uploadedPhotos.push({ file:file, dataUrl:e.target.result }); renderPhotoGrid(); };
+      reader.readAsDataURL(file);
+    })(f);
+  }
+  document.getElementById('photoInput').value = '';
+}
+
+function renderPhotoGrid() {
+  var grid = document.getElementById('photoPreviewGrid');
+  grid.innerHTML = '';
+  uploadedPhotos.forEach(function(p, i) {
+    var d = document.createElement('div');
+    d.className = 'photo-preview-item';
+    d.innerHTML = '<img src="' + p.dataUrl + '"><button class="photo-remove-btn" onclick="removePhoto(' + i + ')">X</button>';
+    grid.appendChild(d);
+  });
+  document.getElementById('photoCount').textContent = uploadedPhotos.length > 0 ? uploadedPhotos.length + '/8 uploaded' : '';
+  document.getElementById('photoInlineReminder').style.display = uploadedPhotos.length > 0 ? 'flex' : 'none';
+}
+
+function removePhoto(i) { uploadedPhotos.splice(i, 1); renderPhotoGrid(); }
+
+/* ================================================================
+   ACCORDION & TABS
+   ================================================================ */
+function toggleAccordion(id) {
+  var acc = document.getElementById(id);
+  acc.querySelector('.accordion-header').classList.toggle('open');
+  acc.querySelector('.accordion-body').classList.toggle('open');
+}
+
+function switchPriceTab(btn, tabId) {
+  var body = btn.closest('.accordion-body');
+  body.querySelectorAll('.price-tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  body.querySelectorAll('.price-tab-content').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById(tabId).classList.add('active');
+}
+
+/* ================================================================
+   BUILD SUMMARY
+   ================================================================ */
+function buildSummary() {
+  var name = gv('customerName'), phone = gv('customerPhone'), email = gv('customerEmail');
+  var address = gv('customerAddress'), delivAddr = gv('deliveryAddress');
+  var areaSelect = document.getElementById('customerArea');
+  var areaText = areaSelect.options[areaSelect.selectedIndex].textContent.replace(/[✈️🚢⚠️]/g,'').trim();
+  var notes = gv('specialNotes');
+
+  document.getElementById('sumName').textContent = name;
+  document.getElementById('sumPhone').textContent = phone;
+  document.getElementById('sumEmail').textContent = email || '—';
+  document.getElementById('sumAddress').textContent = address;
+  document.getElementById('sumDeliveryAddr').textContent = delivAddr || 'Same as pickup 同取衣地址';
+  document.getElementById('sumArea').textContent = areaText;
+
+  var schedule = DRIVER_SCHEDULE[selectedSlot];
+  var pickupText = formatDateFull(selectedDate) + '  ' + schedule.label + ' ' + schedule.time;
+  document.getElementById('sumPickup').textContent = pickupText;
+
+  document.getElementById('sumNotesRow').style.display = notes ? 'flex' : 'none';
+  if (notes) document.getElementById('sumNotes').textContent = notes;
+
+  var servHTML = '', hasDisc = false, hasNoDisc = false;
+  selectedServices.forEach(function(s) {
+    var svc = SERVICE_INFO[s];
+    var tag = svc.discountable ? '✅ Discount OK' : '🚫 No Discount';
+    servHTML += '<div class="summary-row"><span class="label">' + svc.name + '</span><span class="value" style="font-size:12px">' + tag + '</span></div>';
+    if (svc.discountable) hasDisc = true; else hasNoDisc = true;
+  });
+  document.getElementById('sumServices').innerHTML = servHTML;
+
+  if (selectedPayment && PAYMENT_METHODS[selectedPayment]) {
+    document.getElementById('sumPaymentRow').style.display = 'flex';
+    document.getElementById('sumPayment').textContent = PAYMENT_METHODS[selectedPayment].name + ' (20% off)';
+  } else { document.getElementById('sumPaymentRow').style.display = 'none'; }
+
+  if (uploadedPhotos.length > 0) {
+    document.getElementById('photoWarningBanner').style.display = 'block';
+    document.getElementById('pwPhotoCount').textContent = uploadedPhotos.length;
+    document.getElementById('pwPhotoCount2').textContent = uploadedPhotos.length;
+    document.getElementById('sumPhotoSection').style.display = 'block';
+    document.getElementById('sumPhotos').innerHTML = uploadedPhotos.map(function(p) { return '<img src="' + p.dataUrl + '">'; }).join('');
+  } else {
+    document.getElementById('photoWarningBanner').style.display = 'none';
+    document.getElementById('sumPhotoSection').style.display = 'none';
+  }
+
+  var parking = getParkingFee(), stairs = getStairsFee();
+  var min = getMinOrder();
+  document.getElementById('sumMinOrder').textContent = 'HK$' + min;
+  document.getElementById('sumMinOrderNoteText').textContent = '如未達最低消費，仍會收取 $' + min + ' 最低消費。If below minimum, $' + min + ' will be charged.';
+  document.getElementById('sumParkingRow').style.display = parking > 0 ? 'flex' : 'none';
+  if (parking > 0) document.getElementById('sumParking').textContent = 'HK$' + parking;
+  document.getElementById('sumStairsRow').style.display = stairs > 0 ? 'flex' : 'none';
+  if (stairs > 0) document.getElementById('sumStairs').textContent = 'HK$' + stairs;
+
+  if (selectedPayment && hasDisc) {
+    document.getElementById('sumDiscountRow').style.display = 'flex';
+    document.getElementById('sumDiscount').textContent = '20% off eligible services 合資格服務八折';
+  } else { document.getElementById('sumDiscountRow').style.display = 'none'; }
+
+  if (driverResult) {
+    document.getElementById('sumDriverZone').textContent = driverResult.zoneName || '--';
+    document.getElementById('sumDriverName').textContent = driverResult.driver || '--';
+    document.getElementById('sumDriverSlot').textContent = driverResult.slotLabel || '--';
+    if (driverResult.backup) {
+      document.getElementById('sumDriverBackupRow').style.display = 'flex';
+      document.getElementById('sumDriverBackup').textContent = driverResult.backup;
+    } else { document.getElementById('sumDriverBackupRow').style.display = 'none'; }
+  }
+
+  orderData = {
+    name:name, phone:phone, email:email, address:address, delivAddr:delivAddr, area:areaText,
+    district:getSelectedDistrict(),
+    services:Array.from(selectedServices),
+    pickupDate:selectedDate, pickupSlot:selectedSlot, pickupText:pickupText, notes:notes,
+    minOrder:min, parking:parking, stairs:stairs,
+    isRemote:isRemoteArea(),
+    payment:selectedPayment ? PAYMENT_METHODS[selectedPayment] : null,
+    hasDiscountable:hasDisc, hasNonDiscountable:hasNoDisc,
+    photoCount:uploadedPhotos.length,
+    driver:driverResult
+  };
+}
+
+/* ================================================================
+   GOOGLE SHEETS INTEGRATION — ← CHANGE 2: New function
+   ================================================================ */
+function sendToGoogleSheets(orderId, method) {
+  var schedule = DRIVER_SCHEDULE[orderData.pickupSlot];
+
+  var sheetData = {
+    orderNumber: orderId,
+    submitMethod: method === 'whatsapp' ? 'WhatsApp' : 'Email',
+    name: orderData.name,
+    phone: orderData.phone,
+    email: orderData.email || '',
+    pickupAddress: orderData.address,
+    deliveryAddress: orderData.delivAddr || 'Same as pickup',
+    area: orderData.area,
+    isRemote: orderData.isRemote ? 'Yes' : 'No',
+    services: orderData.services.map(function(s) {
+      return SERVICE_INFO[s].nameEN;
+    }).join(', '),
+    pickupDate: formatDatePlain(orderData.pickupDate),
+    timeSlot: schedule.label + ' ' + schedule.time,
+    payment: orderData.payment ? orderData.payment.name : 'Not selected',
+    notes: orderData.notes || '',
+    photoCount: orderData.photoCount,
+    minOrder: 'HK$' + orderData.minOrder,
+    parkingFee: orderData.parking > 0 ? 'HK$' + orderData.parking : '$0',
+    stairsFee: orderData.stairs > 0 ? 'HK$' + orderData.stairs : '$0',
+    driver: orderData.driver ? orderData.driver.driver : 'N/A',
+    backupDriver: orderData.driver && orderData.driver.backup ? orderData.driver.backup : 'None',
+    zone: orderData.driver ? orderData.driver.zoneName : 'N/A'
+  };
+
+  fetch(CONFIG.GOOGLE_SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(sheetData)
+  })
+  .then(function() { console.log('Order saved to Google Sheets'); })
+  .catch(function(err) { console.error('Google Sheets error:', err); });
+}
+
+/* ================================================================
+   SUBMIT ORDER
+   ================================================================ */
+function submitOrder(method) {
+  var orderId = 'SL-' + Date.now().toString(36).toUpperCase().slice(-6) + Math.floor(Math.random() * 100);
+
+  // Save to Google Sheets  /* ← CHANGE 3: Added this line */
+  sendToGoogleSheets(orderId, method);
+
+  var ln = '\n';
+  var divider = '================================';
+
+  var msg = '';
+  msg += 'SUNSHINE LAUNDRY - NEW ORDER' + ln;
+  msg += '陽光洗衣 - 新訂單' + ln;
+  msg += divider + ln;
+  msg += 'Order No. 訂單編號: ' + orderId + ln;
+  msg += ln;
+
+  msg += '[Customer Info 顧客資料]' + ln;
+  msg += 'Name 姓名: ' + orderData.name + ln;
+  msg += 'Phone 電話: ' + orderData.phone + ln;
+  if (orderData.email) msg += 'Email 電郵: ' + orderData.email + ln;
+  msg += 'Pickup Address 取衣地址: ' + orderData.address + ln;
+  if (orderData.delivAddr) {
+    msg += 'Delivery Address 送回地址: ' + orderData.delivAddr + ln;
+  } else {
+    msg += 'Delivery Address 送回地址: Same as pickup 同取衣地址' + ln;
+  }
+  msg += 'Area 地區: ' + orderData.area;
+  if (orderData.isRemote) msg += ' (Remote 偏遠地區)';
+  msg += ln;
+  msg += ln;
+
+  msg += '[Services 服務項目]' + ln;
+  orderData.services.forEach(function(s) {
+    var svc = SERVICE_INFO[s];
+    var discNote = svc.discountable ? '(Discount OK 可享折扣)' : '(No Discount 原價無折)';
+    msg += '- ' + svc.nameCN + ' / ' + svc.nameEN + ' ' + discNote + ln;
+  });
+  msg += ln;
+
+  msg += '[Pickup Schedule 收件安排]' + ln;
+  var schedule = DRIVER_SCHEDULE[orderData.pickupSlot];
+  msg += 'Date 日期: ' + formatDatePlain(orderData.pickupDate) + ln;
+  msg += 'Time Slot 時段: ' + schedule.label + ' ' + schedule.time + ln;
+  msg += ln;
+
+  msg += '[Fees 費用]' + ln;
+  msg += 'Min Order 最低消費: HK$' + orderData.minOrder + ln;
+  msg += '(如訂單未達最低消費，仍會收取 $' + orderData.minOrder + ' 最低消費費用)' + ln;
+  msg += '(If below minimum, $' + orderData.minOrder + ' minimum fee will be charged)' + ln;
+  if (orderData.parking > 0) msg += 'Parking Fee 停車費: HK$' + orderData.parking + ln;
+  if (orderData.stairs > 0) {
+    var floors = parseInt(document.getElementById('floorCount').value) || 0;
+    var tripLabel = document.getElementById('tripType').value === 'round_trip' ? '來回 Round trip' : '單程 One way';
+    msg += 'Stairs Fee 樓梯費: HK$' + orderData.stairs + ' (' + floors + ' floor(s) 層, ' + tripLabel + ')' + ln;
+  }
+  if (orderData.payment) {
+    msg += 'Payment 付款方式: ' + orderData.payment.nameCN + ' -> 20% off eligible services 合資格服務八折' + ln;
+  }
+  msg += ln;
+
+  if (orderData.photoCount > 0) {
+    msg += '[Photos 照片]' + ln;
+    msg += orderData.photoCount + ' photo(s) uploaded 已上傳照片' + ln;
+    msg += '** IMPORTANT 重要: Photos will NOT be sent automatically via this link. **' + ln;
+    msg += '** 照片不會自動傳送，請在此對話中手動發送照片。 **' + ln;
+    msg += ln;
+  }
+
+  if (orderData.notes) {
+    msg += '[Special Notes 特別要求]' + ln;
+    msg += orderData.notes + ln;
+    msg += ln;
+  }
+
+  if (orderData.driver) {
+    msg += divider + ln;
+    msg += '[Driver Assignment 司機分配] (Internal 內部)' + ln;
+    msg += 'Zone 區域: ' + orderData.driver.zoneName + ln;
+    msg += 'Driver 司機: ' + orderData.driver.driver + ln;
+    if (orderData.driver.backup) msg += 'Backup 後備: ' + orderData.driver.backup + ln;
+    msg += 'Slot 時段: ' + orderData.driver.slotLabel + ln;
+  }
+
+  msg += divider + ln;
+  msg += 'Final charges confirmed after item assessment.' + ln;
+  msg += '最終費用將在取衣評估後確認。' + ln;
+
+  if (method === 'whatsapp') {
+    window.open('https://wa.me/' + CONFIG.WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+  } else {
+    var subject = 'Sunshine Laundry Order 陽光洗衣訂單 ' + orderId;
+    window.open('mailto:' + CONFIG.EMAIL_ADDRESS + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(msg), '_self');
+  }
+
+  document.getElementById('orderNumber').textContent = 'Order 訂單 ' + orderId;
+  if (orderData.photoCount > 0) {
+    document.getElementById('photoReminder').style.display = 'block';
+    document.getElementById('photoReminderCount').textContent = orderData.photoCount;
+    document.getElementById('photoReminderCount2').textContent = orderData.photoCount;
+  } else { document.getElementById('photoReminder').style.display = 'none'; }
+
+  var det = '<div class="info-box teal"><span class="info-box-icon">📋</span><div>';
+  det += '<strong>Pickup 收件:</strong> ' + orderData.pickupText + '<br>';
+  det += '<strong>Services 服務:</strong> ' + orderData.services.map(function(s){ return SERVICE_INFO[s].name; }).join(', ') + '<br>';
+  det += '<strong>Area 地區:</strong> ' + orderData.area;
+  if (orderData.payment) det += '<br><strong>Payment 付款:</strong> ' + orderData.payment.name;
+  det += '</div></div>';
+  document.getElementById('successDetails').innerHTML = det;
+
+  showStep(5);
+}
+
+/* ================================================================
+   ADMIN PANEL
+   ================================================================ */
+function showPinModal() {
+  if (adminMode) { openAdminPanel(); return; }
+  document.getElementById('pinModal').classList.add('show');
+  document.getElementById('pinInput').value = '';
+  document.getElementById('pinError').style.display = 'none';
+  setTimeout(function() { document.getElementById('pinInput').focus(); }, 200);
+}
+
+function closePinModal() { document.getElementById('pinModal').classList.remove('show'); }
+
+function verifyPin() {
+  if (document.getElementById('pinInput').value === CONFIG.ADMIN_PIN) {
+    adminMode = true;
+    document.body.classList.add('admin-mode');
+    document.getElementById('adminToggleBtn').classList.add('active');
+    document.getElementById('adminIndicator').classList.add('show');
+    closePinModal();
+    openAdminPanel();
+    updateDriverCard();
+  } else {
+    document.getElementById('pinError').style.display = 'block';
+    document.getElementById('pinInput').value = '';
+    document.getElementById('pinInput').focus();
+  }
+}
+
+function exitAdminMode() {
+  adminMode = false;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('adminToggleBtn').classList.remove('active');
+  document.getElementById('adminIndicator').classList.remove('show');
+  closeAdminPanel();
+}
+
+function openAdminPanel() { renderAdminSchedule(); document.getElementById('adminPanel').classList.add('open'); }
+function closeAdminPanel() { document.getElementById('adminPanel').classList.remove('open'); }
+
+function renderAdminSchedule() {
+  var container = document.getElementById('adminScheduleContent');
+  var slotsToShow = ['slotA','slotB','slotC','slotD','slotSpecial'];
+  var html = '';
+
+  slotsToShow.forEach(function(slotId) {
+    var schedule = DRIVER_SCHEDULE[slotId];
+    if (!schedule) return;
+    var isRest = !schedule.available;
+
+    html += '<div class="schedule-block' + (isRest ? ' rest-block' : '') + '">';
+    html += '<h4>' + schedule.icon + ' ' + schedule.label + ' ' + schedule.time + '</h4>';
+
+    if (isRest) {
+      html += '<div style="font-size:14px; color:#92400e; font-weight:600">不接單 No Pickup</div>';
+    } else {
+      var zones = schedule.specialOnly ? ['special'] : Object.keys(ZONE_NAMES);
+      zones.forEach(function(zone) {
+        var a = schedule.assignments ? schedule.assignments[zone] : null;
+        if (!a) return;
+        html += '<div class="sb-row">';
+        html += '<span class="sb-zone">' + ZONE_NAMES[zone] + '</span>';
+        html += '<span class="sb-driver">' + a.primary.join(' / ');
+        if (a.backup) html += ' <span style="font-size:11px;color:#d97706">(備用:' + a.backup + ')</span>';
+        html += '</span></div>';
+      });
+      if (schedule.overrides && Object.keys(schedule.overrides).length > 0) {
+        html += '<div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--gray-300); font-size:12px; color:var(--gray-500)">';
+        html += '<strong>Overrides 覆蓋:</strong><br>';
+        for (var dist in schedule.overrides) {
+          html += dist + ' -> ' + schedule.overrides[dist].primary.join('/') + '<br>';
+        }
+        html += '</div>';
+      }
+    }
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+/* ================================================================
+   RESET
+   ================================================================ */
+function resetForm() {
+  ['customerName','customerPhone','customerEmail','customerAddress','deliveryAddress','specialNotes'].forEach(function(id) { document.getElementById(id).value = ''; });
+  document.getElementById('customerArea').selectedIndex = 0;
+  document.getElementById('floorCount').value = 0;
+  document.getElementById('parkingFee').value = 0;
+  document.getElementById('parkingToggle').checked = false;
+  document.getElementById('stairsToggle').checked = false;
+  document.getElementById('stairsDetails').style.display = 'none';
+  document.getElementById('parkingFeeGroup').style.display = 'none';
+  document.getElementById('remoteAreaNotice').style.display = 'none';
+  document.getElementById('tripType').selectedIndex = 0;
+  document.getElementById('customDateWrap').style.display = 'none';
+
+  selectedServices.clear(); selectedPayment = null; selectedDate = null; selectedSlot = null;
+  driverResult = null; uploadedPhotos = [];
+
+  document.querySelectorAll('.service-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.querySelectorAll('.discount-card').forEach(function(c) { c.classList.remove('selected'); });
+  renderPhotoGrid();
+  ['fg-name','fg-phone','fg-address','fg-area','fg-email'].forEach(function(id) { var e = document.getElementById(id); if (e) e.classList.remove('error'); });
+  document.querySelectorAll('.accordion-header').forEach(function(h) { h.classList.remove('open'); });
+  document.querySelectorAll('.accordion-body').forEach(function(b) { b.classList.remove('open'); });
+  document.getElementById('selectedDateDisplay').style.display = 'none';
+  document.getElementById('slotSection').style.display = 'none';
+  document.getElementById('driverCard').style.display = 'none';
+  document.getElementById('photoWarningBanner').style.display = 'none';
+  showStep(1);
+}
+
+/* ================================================================
+   UTILITIES
+   ================================================================ */
+function gv(id) { return document.getElementById(id).value.trim(); }
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function showModal(t, m) {
+  document.getElementById('modalTitle').textContent = t;
+  document.getElementById('modalMessage').textContent = m;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+</script>
+
+</body>
+</html>
