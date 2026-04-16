@@ -1688,8 +1688,8 @@ function sendToGoogleSheets(orderId, method) {
 function submitOrder(method) {
   var orderId = 'SL-' + Date.now().toString(36).toUpperCase().slice(-6) + Math.floor(Math.random() * 100);
 
-  // Save to Google Sheets  /* ← CHANGE 3: Added this line */
-  sendToGoogleSheets(orderId, method);
+  // Save to Google Sheets (wrapped in try-catch so it never blocks the order)
+  try { sendToGoogleSheets(orderId, method); } catch(err) { console.error('Sheets error:', err); }
 
   var ln = '\n';
   var divider = '================================';
@@ -1776,7 +1776,7 @@ function submitOrder(method) {
     window.open('https://wa.me/' + CONFIG.WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
   } else {
     var subject = 'Sunshine Laundry Order 陽光洗衣訂單 ' + orderId;
-    window.open('mailto:' + CONFIG.EMAIL_ADDRESS + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(msg), '_self');
+    window.location.href = 'mailto:' + CONFIG.EMAIL_ADDRESS + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(msg);
   }
 
   document.getElementById('orderNumber').textContent = 'Order 訂單 ' + orderId;
