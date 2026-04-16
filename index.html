@@ -296,6 +296,16 @@ body.admin-mode .admin-only { display:block !important; }
 .photo-warning-banner .pw-text { font-size:14px; color:#78350f; line-height:1.6; }
 .photo-warning-banner .pw-note { font-size:12px; color:#a16207; margin-top:8px; font-style:italic; }
 
+/* === TOAST NOTIFICATION === */
+.toast-notification {
+  position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px);
+  background:var(--primary); color:white; padding:16px 28px; border-radius:12px;
+  font-size:15px; font-weight:600; z-index:99999; box-shadow:var(--shadow-xl);
+  max-width:90%; text-align:center; transition:transform 0.4s ease;
+  line-height:1.5;
+}
+.toast-notification.show { transform:translateX(-50%) translateY(0); }
+
 @media (max-width:600px) {
   .laundry-app { padding:12px 10px 60px; }
   .app-header { padding:28px 16px; }
@@ -879,6 +889,17 @@ body.admin-mode .admin-only { display:block !important; }
         <h2>Order Submitted! 訂單已提交！</h2>
         <p>We'll confirm your pickup shortly via WhatsApp. 我們會盡快透過WhatsApp確認收件安排。</p>
         <div class="order-number" id="orderNumber">Order #—</div>
+
+        <!-- NEW: Email paste reminder banner -->
+        <div id="emailPasteReminder" class="info-box blue" style="display:none; margin-bottom:20px; text-align:left;">
+          <span class="info-box-icon">📋</span>
+          <div>
+            <strong>Order details copied to clipboard! 訂單詳情已複製！</strong><br>
+            Your email app should have opened. Please paste (Ctrl+V / Cmd+V) the order details into the email body.<br>
+            您的電郵程式應已開啟，請將訂單內容貼上 (Ctrl+V / Cmd+V) 到電郵正文。
+          </div>
+        </div>
+
         <div id="photoReminder" class="photo-warning-banner" style="display:none; margin-bottom:20px;">
           <span class="pw-icon">📸</span>
           <div class="pw-title">PLEASE SEND YOUR PHOTOS NOW 請立即發送照片</div>
@@ -910,6 +931,9 @@ body.admin-mode .admin-only { display:block !important; }
   </div>
 </div>
 
+<!-- TOAST NOTIFICATION ELEMENT -->
+<div class="toast-notification" id="toastNotification"></div>
+
 <!-- MODALS -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
@@ -933,9 +957,9 @@ body.admin-mode .admin-only { display:block !important; }
 
 <script>
 /* ================================================================
-   CONFIG — ← CHANGE 1: Added GOOGLE_SHEET_URL
+   CONFIG
    ================================================================ */
-const CONFIG = {
+var CONFIG = {
   WHATSAPP_NUMBER: '85266291949',
   EMAIL_ADDRESS: 'enquiry@sunshinelaundry.com.hk',
   ADMIN_PIN: '1949',
@@ -948,7 +972,7 @@ const CONFIG = {
 /* ================================================================
    DISTRICT ZONES
    ================================================================ */
-const DISTRICT_ZONES = {
+var DISTRICT_ZONES = {
   hk_wanchai_central: ['central','sheung_wan','sai_ying_pun','kennedy_town','wanchai','causeway_bay','happy_valley','mid_levels','the_peak'],
   hk_east: ['north_point','quarry_bay','tai_koo','sai_wan_ho','shau_kei_wan','chai_wan','siu_sai_wan','heng_fa_chuen'],
   hk_south: ['pok_fu_lam','aberdeen','ap_lei_chau','wong_chuk_hang','repulse_bay','stanley','shek_o'],
@@ -958,7 +982,7 @@ const DISTRICT_ZONES = {
   special: ['tung_chung','discovery_bay']
 };
 
-const ZONE_NAMES = {
+var ZONE_NAMES = {
   hk_wanchai_central: '港島灣仔區-中西區',
   hk_east: '港島東',
   hk_south: '港島南',
@@ -971,7 +995,7 @@ const ZONE_NAMES = {
 /* ================================================================
    DRIVER SCHEDULE
    ================================================================ */
-const DRIVER_SCHEDULE = {
+var DRIVER_SCHEDULE = {
   slotA: {
     id:'slotA', time:'08:00 - 10:00', label:'早上 Morning', icon:'🌅', available:true,
     assignments: {
@@ -1026,7 +1050,7 @@ const DRIVER_SCHEDULE = {
   }
 };
 
-const SERVICE_INFO = {
+var SERVICE_INFO = {
   dry_clean:          { name:'乾洗連熨衣 Dry Clean w/ Iron', nameCN:'乾洗連熨衣', nameEN:'Dry Clean w/ Iron', days:7, discountable:true },
   laundry_iron:       { name:'濕洗連熨衣 Laundry w/ Iron', nameCN:'濕洗連熨衣', nameEN:'Laundry w/ Iron', days:5, discountable:true },
   laundry_weight:     { name:'磅洗 Wash by Weight', nameCN:'磅洗', nameEN:'Wash by Weight', days:5, discountable:true },
@@ -1034,7 +1058,7 @@ const SERVICE_INFO = {
   color_dye:          { name:'染色 Color Dye', nameCN:'染色', nameEN:'Color Dye', days:25, discountable:false }
 };
 
-const PAYMENT_METHODS = {
+var PAYMENT_METHODS = {
   fps:           { name:'FPS 轉數快', nameCN:'轉數快 FPS', discount:20 },
   payme:         { name:'PayMe', nameCN:'PayMe', discount:20 },
   alipay:        { name:'AlipayHK 支付寶', nameCN:'支付寶 AlipayHK', discount:20 },
@@ -1046,15 +1070,87 @@ const PAYMENT_METHODS = {
 /* ================================================================
    APP STATE
    ================================================================ */
-let currentStep = 1;
-let selectedServices = new Set();
-let selectedPayment = null;
-let selectedDate = null;
-let selectedSlot = null;
-let uploadedPhotos = [];
-let driverResult = null;
-let adminMode = false;
-let orderData = {};
+var currentStep = 1;
+var selectedServices = new Set();
+var selectedPayment = null;
+var selectedDate = null;
+var selectedSlot = null;
+var uploadedPhotos = [];
+var driverResult = null;
+var adminMode = false;
+var orderData = {};
+
+/* In-memory order counter backup (persists within same session) */
+var orderCounters = {};
+
+/* ================================================================
+   ORDER NUMBER GENERATOR — SLD-WO{YYYYMM}{NNN}
+   ================================================================ */
+function generateOrderId() {
+  var now = new Date();
+  var yyyy = String(now.getFullYear());
+  var mm = String(now.getMonth() + 1).padStart(2, '0');
+  var yearMonth = yyyy + mm;
+  var counterKey = 'SLD_order_counter_' + yearMonth;
+
+  /* Try to load from localStorage, fallback to in-memory counter */
+  var count = orderCounters[yearMonth] || 0;
+  if (count === 0) {
+    try {
+      count = parseInt(localStorage.getItem(counterKey)) || 0;
+    } catch (e) { /* localStorage unavailable */ }
+  }
+
+  count++;
+  orderCounters[yearMonth] = count;
+
+  try {
+    localStorage.setItem(counterKey, String(count));
+  } catch (e) { /* localStorage unavailable */ }
+
+  var seq = String(count).padStart(3, '0');
+  return 'SLD-WO' + yearMonth + seq;
+}
+
+/* ================================================================
+   CLIPBOARD HELPERS (for email fix)
+   ================================================================ */
+function copyToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).catch(function () {
+      fallbackCopy(text);
+    });
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  ta.style.top = '-9999px';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
+  try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+  document.body.removeChild(ta);
+}
+
+/* ================================================================
+   TOAST NOTIFICATION
+   ================================================================ */
+function showToast(message, duration) {
+  duration = duration || 5000;
+  var toast = document.getElementById('toastNotification');
+  toast.innerHTML = message;
+  toast.classList.add('show');
+  setTimeout(function () {
+    toast.classList.remove('show');
+  }, duration);
+}
 
 /* ================================================================
    NAVIGATION
@@ -1073,17 +1169,17 @@ function prevStep(from) { showStep(from - 1); }
 
 function showStep(step) {
   currentStep = step;
-  for (let i = 1; i <= 5; i++) document.getElementById('step' + i).classList.toggle('active', i === step);
+  for (var i = 1; i <= 5; i++) document.getElementById('step' + i).classList.toggle('active', i === step);
   updateProgress();
   if (step === 3) initScheduleStep();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateProgress() {
-  const steps = document.querySelectorAll('.progress-step');
-  const conns = document.querySelectorAll('.progress-connector');
+  var steps = document.querySelectorAll('.progress-step');
+  var conns = document.querySelectorAll('.progress-connector');
   steps.forEach(function(el, i) {
-    const n = i + 1;
+    var n = i + 1;
     el.classList.remove('active','completed');
     if (n === currentStep) el.classList.add('active');
     else if (n < currentStep) el.classList.add('completed');
@@ -1095,8 +1191,8 @@ function updateProgress() {
    VALIDATION
    ================================================================ */
 function validateStep1() {
-  let ok = true;
-  const name = gv('customerName'), phone = gv('customerPhone'), addr = gv('customerAddress'), area = document.getElementById('customerArea').value;
+  var ok = true;
+  var name = gv('customerName'), phone = gv('customerPhone'), addr = gv('customerAddress'), area = document.getElementById('customerArea').value;
   toggleError('fg-name', !name); if (!name) ok = false;
   toggleError('fg-phone', !phone || phone.length < 6); if (!phone || phone.length < 6) ok = false;
   toggleError('fg-address', !addr); if (!addr) ok = false;
@@ -1641,7 +1737,7 @@ function buildSummary() {
 }
 
 /* ================================================================
-   GOOGLE SHEETS INTEGRATION — ← CHANGE 2: New function
+   GOOGLE SHEETS INTEGRATION
    ================================================================ */
 function sendToGoogleSheets(orderId, method) {
   var schedule = DRIVER_SCHEDULE[orderData.pickupSlot];
@@ -1683,12 +1779,12 @@ function sendToGoogleSheets(orderId, method) {
 }
 
 /* ================================================================
-   SUBMIT ORDER
+   SUBMIT ORDER  (FIXED: email now uses clipboard + short mailto)
    ================================================================ */
 function submitOrder(method) {
-  var orderId = 'SL-' + Date.now().toString(36).toUpperCase().slice(-6) + Math.floor(Math.random() * 100);
+  var orderId = generateOrderId();
 
-  // Save to Google Sheets (wrapped in try-catch so it never blocks the order)
+  /* Save to Google Sheets (never blocks the order) */
   try { sendToGoogleSheets(orderId, method); } catch(err) { console.error('Sheets error:', err); }
 
   var ln = '\n';
@@ -1772,14 +1868,37 @@ function submitOrder(method) {
   msg += 'Final charges confirmed after item assessment.' + ln;
   msg += '最終費用將在取衣評估後確認。' + ln;
 
+  /* Track whether this was an email submit for the success page */
+  var isEmailSubmit = (method === 'email');
+
   if (method === 'whatsapp') {
     window.open('https://wa.me/' + CONFIG.WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
   } else {
+    /* ---- EMAIL FIX ----
+       The full mailto URL with body is too long for browsers.
+       Chinese characters expand ~9x when URL-encoded, causing silent failure.
+       Fix: copy full message to clipboard, open mailto with subject only.
+    */
     var subject = 'Sunshine Laundry Order 陽光洗衣訂單 ' + orderId;
-    window.location.href = 'mailto:' + CONFIG.EMAIL_ADDRESS + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(msg);
+
+    /* Copy order details to clipboard */
+    copyToClipboard(msg);
+
+    /* Show toast notification */
+    showToast('📋 Order copied to clipboard!<br>訂單已複製到剪貼簿！<br>Please paste into your email body.', 6000);
+
+    /* Open email client with subject only (short URL — always works) */
+    setTimeout(function () {
+      window.location.href = 'mailto:' + CONFIG.EMAIL_ADDRESS + '?subject=' + encodeURIComponent(subject);
+    }, 400);
   }
 
+  /* Show success page */
   document.getElementById('orderNumber').textContent = 'Order 訂單 ' + orderId;
+
+  /* Show/hide email paste reminder on success page */
+  document.getElementById('emailPasteReminder').style.display = isEmailSubmit ? 'flex' : 'none';
+
   if (orderData.photoCount > 0) {
     document.getElementById('photoReminder').style.display = 'block';
     document.getElementById('photoReminderCount').textContent = orderData.photoCount;
@@ -1907,6 +2026,7 @@ function resetForm() {
   document.getElementById('slotSection').style.display = 'none';
   document.getElementById('driverCard').style.display = 'none';
   document.getElementById('photoWarningBanner').style.display = 'none';
+  document.getElementById('emailPasteReminder').style.display = 'none';
   showStep(1);
 }
 
