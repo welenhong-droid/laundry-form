@@ -296,16 +296,6 @@ body.admin-mode .admin-only { display:block !important; }
 .photo-warning-banner .pw-text { font-size:14px; color:#78350f; line-height:1.6; }
 .photo-warning-banner .pw-note { font-size:12px; color:#a16207; margin-top:8px; font-style:italic; }
 
-/* === TOAST NOTIFICATION === */
-.toast-notification {
-  position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px);
-  background:var(--primary); color:white; padding:16px 28px; border-radius:12px;
-  font-size:15px; font-weight:600; z-index:99999; box-shadow:var(--shadow-xl);
-  max-width:90%; text-align:center; transition:transform 0.4s ease;
-  line-height:1.5;
-}
-.toast-notification.show { transform:translateX(-50%) translateY(0); }
-
 @media (max-width:600px) {
   .laundry-app { padding:12px 10px 60px; }
   .app-header { padding:28px 16px; }
@@ -873,10 +863,7 @@ body.admin-mode .admin-only { display:block !important; }
       </div>
       <div class="btn-group">
         <button class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
-        <button class="btn btn-whatsapp btn-block" onclick="submitOrder('whatsapp')" style="flex:2">📱 Submit via WhatsApp</button>
-      </div>
-      <div style="text-align:center; margin-top:12px">
-        <button class="btn btn-primary btn-block" onclick="submitOrder('email')">✉️ Submit via Email</button>
+        <button class="btn btn-whatsapp btn-block" onclick="submitOrder()" style="flex:2">📱 Submit via WhatsApp</button>
       </div>
     </div>
   </div>
@@ -889,16 +876,6 @@ body.admin-mode .admin-only { display:block !important; }
         <h2>Order Submitted! 訂單已提交！</h2>
         <p>We'll confirm your pickup shortly via WhatsApp. 我們會盡快透過WhatsApp確認收件安排。</p>
         <div class="order-number" id="orderNumber">Order #—</div>
-
-        <!-- NEW: Email paste reminder banner -->
-        <div id="emailPasteReminder" class="info-box blue" style="display:none; margin-bottom:20px; text-align:left;">
-          <span class="info-box-icon">📋</span>
-          <div>
-            <strong>Order details copied to clipboard! 訂單詳情已複製！</strong><br>
-            Your email app should have opened. Please paste (Ctrl+V / Cmd+V) the order details into the email body.<br>
-            您的電郵程式應已開啟，請將訂單內容貼上 (Ctrl+V / Cmd+V) 到電郵正文。
-          </div>
-        </div>
 
         <div id="photoReminder" class="photo-warning-banner" style="display:none; margin-bottom:20px;">
           <span class="pw-icon">📸</span>
@@ -931,9 +908,6 @@ body.admin-mode .admin-only { display:block !important; }
   </div>
 </div>
 
-<!-- TOAST NOTIFICATION ELEMENT -->
-<div class="toast-notification" id="toastNotification"></div>
-
 <!-- MODALS -->
 <div class="modal-overlay" id="modal">
   <div class="modal-box">
@@ -961,7 +935,6 @@ body.admin-mode .admin-only { display:block !important; }
    ================================================================ */
 var CONFIG = {
   WHATSAPP_NUMBER: '85266291949',
-  EMAIL_ADDRESS: 'enquiry@sunshinelaundry.com.hk',
   ADMIN_PIN: '1949',
   CUTOFF_HOUR: 11,
   MIN_ORDER_NORMAL: 300,
@@ -1093,7 +1066,6 @@ function generateOrderId() {
   var yearMonth = yyyy + mm;
   var counterKey = 'SLD_order_counter_' + yearMonth;
 
-  /* Try to load from localStorage, fallback to in-memory counter */
   var count = orderCounters[yearMonth] || 0;
   if (count === 0) {
     try {
@@ -1110,46 +1082,6 @@ function generateOrderId() {
 
   var seq = String(count).padStart(3, '0');
   return 'SLD-WO' + yearMonth + seq;
-}
-
-/* ================================================================
-   CLIPBOARD HELPERS (for email fix)
-   ================================================================ */
-function copyToClipboard(text) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).catch(function () {
-      fallbackCopy(text);
-    });
-  } else {
-    fallbackCopy(text);
-  }
-}
-
-function fallbackCopy(text) {
-  var ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.position = 'fixed';
-  ta.style.left = '-9999px';
-  ta.style.top = '-9999px';
-  ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  try { document.execCommand('copy'); } catch (e) { /* ignore */ }
-  document.body.removeChild(ta);
-}
-
-/* ================================================================
-   TOAST NOTIFICATION
-   ================================================================ */
-function showToast(message, duration) {
-  duration = duration || 5000;
-  var toast = document.getElementById('toastNotification');
-  toast.innerHTML = message;
-  toast.classList.add('show');
-  setTimeout(function () {
-    toast.classList.remove('show');
-  }, duration);
 }
 
 /* ================================================================
@@ -1739,12 +1671,12 @@ function buildSummary() {
 /* ================================================================
    GOOGLE SHEETS INTEGRATION
    ================================================================ */
-function sendToGoogleSheets(orderId, method) {
+function sendToGoogleSheets(orderId) {
   var schedule = DRIVER_SCHEDULE[orderData.pickupSlot];
 
   var sheetData = {
     orderNumber: orderId,
-    submitMethod: method === 'whatsapp' ? 'WhatsApp' : 'Email',
+    submitMethod: 'WhatsApp',
     name: orderData.name,
     phone: orderData.phone,
     email: orderData.email || '',
@@ -1779,13 +1711,13 @@ function sendToGoogleSheets(orderId, method) {
 }
 
 /* ================================================================
-   SUBMIT ORDER  (FIXED: email now uses clipboard + short mailto)
+   SUBMIT ORDER (WhatsApp only)
    ================================================================ */
-function submitOrder(method) {
+function submitOrder() {
   var orderId = generateOrderId();
 
-  /* Save to Google Sheets (never blocks the order) */
-  try { sendToGoogleSheets(orderId, method); } catch(err) { console.error('Sheets error:', err); }
+  /* Save to Google Sheets */
+  try { sendToGoogleSheets(orderId); } catch(err) { console.error('Sheets error:', err); }
 
   var ln = '\n';
   var divider = '================================';
@@ -1868,36 +1800,11 @@ function submitOrder(method) {
   msg += 'Final charges confirmed after item assessment.' + ln;
   msg += '最終費用將在取衣評估後確認。' + ln;
 
-  /* Track whether this was an email submit for the success page */
-  var isEmailSubmit = (method === 'email');
-
-  if (method === 'whatsapp') {
-    window.open('https://wa.me/' + CONFIG.WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
-  } else {
-    /* ---- EMAIL FIX ----
-       The full mailto URL with body is too long for browsers.
-       Chinese characters expand ~9x when URL-encoded, causing silent failure.
-       Fix: copy full message to clipboard, open mailto with subject only.
-    */
-    var subject = 'Sunshine Laundry Order 陽光洗衣訂單 ' + orderId;
-
-    /* Copy order details to clipboard */
-    copyToClipboard(msg);
-
-    /* Show toast notification */
-    showToast('📋 Order copied to clipboard!<br>訂單已複製到剪貼簿！<br>Please paste into your email body.', 6000);
-
-    /* Open email client with subject only (short URL — always works) */
-    setTimeout(function () {
-      window.location.href = 'mailto:' + CONFIG.EMAIL_ADDRESS + '?subject=' + encodeURIComponent(subject);
-    }, 400);
-  }
+  /* Open WhatsApp */
+  window.open('https://wa.me/' + CONFIG.WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
 
   /* Show success page */
   document.getElementById('orderNumber').textContent = 'Order 訂單 ' + orderId;
-
-  /* Show/hide email paste reminder on success page */
-  document.getElementById('emailPasteReminder').style.display = isEmailSubmit ? 'flex' : 'none';
 
   if (orderData.photoCount > 0) {
     document.getElementById('photoReminder').style.display = 'block';
@@ -2026,7 +1933,6 @@ function resetForm() {
   document.getElementById('slotSection').style.display = 'none';
   document.getElementById('driverCard').style.display = 'none';
   document.getElementById('photoWarningBanner').style.display = 'none';
-  document.getElementById('emailPasteReminder').style.display = 'none';
   showStep(1);
 }
 
