@@ -647,20 +647,19 @@ body.admin-mode .admin-only { display:block !important; }
               </tbody></table></div>
             </div>
 
-            <!-- T&C -->
+            <!-- UPDATED T&C -->
             <div style="margin-top:16px; padding:16px; background:var(--gray-50); border-radius:10px; border:1px solid var(--gray-200);">
-              <strong style="font-size:14px; color:var(--primary-dark);">📜 乾洗•磅洗•熨衣服務、條款及細則</strong>
-              <div style="font-size:12px; color:var(--gray-400); margin-bottom:8px;">Dry-clean · Laundry · Ironing Services Terms & Conditions</div>
+              <strong style="font-size:14px; color:var(--primary-dark);">📜 乾洗／磅洗／熨衣 服務 — 條款及細則</strong>
+              <div style="font-size:12px; color:var(--gray-400); margin-bottom:8px;">Dry-clean / Laundry / Ironing — Terms &amp; Conditions</div>
               <ol class="terms-list">
-                <li class="no-disc">24小時特快乾洗及染色服務（原價無折）。<span class="term-en">No discount for 24 hours express service & Color Dyeing Service.</span></li>
-                <li class="no-disc">即日超特快乾洗服務，照洗衣價加100%及加速費$100～。<span class="term-en">Same Day Super Express Dry Clean Service, listed price +100% + $100 Courier.</span></li>
-                <li class="highlight">洗衣宅急便服務，每次最低消費＄300up-（敬請一天前預約）。<span class="term-en">Laundry Delivery Service, min $300up.- (Please make appointment a day before)</span></li>
-                <li>童裝/淨熨照價8折。<span class="term-en">Children & Ironing clothing 20% Off of the listed price.</span></li>
-                <li>摺裝服務，加收$2/件。<span class="term-en">Folding services, $2/each.</span></li>
-                <li>釘珠、絲/燈芯/厚絨、麻質加收30%服務費。<span class="term-en">Beaded, Velvet, Wool, Silk & Linen items 30% upcharge.</span></li>
-                <li>毛領/邊、帽及配飾，每款/件加＄10-$100不等（視乎大小）。<span class="term-en">Detachable Fur Collar, Trim, Hood & Accessories + $10 to $100/pcs (Depending on the size).</span></li>
-                <li class="no-disc">手袋、皮褸、鞋類原價無折。鞋類及手套均可單隻清洗。<span class="term-en">No discount for Handbags, Leather & Shoes Items. Single Shoes, Boots and Gloves can be washed.</span></li>
-                <li>深層起漬、嘔吐物或排泄物等起漬收費由$80至$200起不等，加速原價無折。<span class="term-en">Intensive Stain, Vomit Dirt, Excrement Remove Charges from $80 to $200 up. No discount for Expedite Service.</span></li>
+                <li class="highlight">每次最低消費$300起；需至少提前 1 天預約。<span class="term-en">Min. spend $300+ per order; book 1 day in advance.</span></li>
+                <li>童裝／淨熨優惠：正價 8 折。<span class="term-en">Children's items &amp; ironing-only: 20% off listed price.</span></li>
+                <li>摺衫服務：另加 $2／件。<span class="term-en">Folding Service is extra $2 per item.</span></li>
+                <li>釘珠、絲質、燈芯絨／厚絨、麻質：加收 30% 服務費。<span class="term-en">Beaded / silk / corduroy / thick velvet / linen: 30% upcharge.</span></li>
+                <li>毛領／毛邊／帽／配飾附加費：每款／每件加收 $10–$100（按大小及款式而定）。<span class="term-en">Detachable fur collar/trim/hood/accessories: +$10–$100 per item (size-dependent).</span></li>
+                <li class="no-disc">手袋、皮褸/皮革、鞋類：一律原價收費，不設折扣。鞋類及手套可單隻清洗。<span class="term-en">No discount for handbags, leather &amp; shoes. Single shoe/boot/glove washing available.</span></li>
+                <li>深層起漬（如：嘔吐物、排泄物等）：附加費 $80–$200 起（視乎污漬及工序）。<span class="term-en">Intensive stain removal (vomit/excrement, etc.): $80–$200+.</span></li>
+                <li class="no-disc">加急／特快服務：原價收費，不設折扣。<span class="term-en">No discount for expedite service.</span></li>
               </ol>
             </div>
           </div>
@@ -716,15 +715,28 @@ body.admin-mode .admin-only { display:block !important; }
   <div class="section" id="step3">
     <div class="card">
       <div class="card-title">🚚 Pickup Schedule 收件安排</div>
-      <div class="card-subtitle">Select your preferred pickup date and time slot.</div>
+      <div class="card-subtitle">Select your preferred pickup date and time slot. 不設即日收件，需至少提前一天預約。</div>
 
       <div class="info-box blue" id="cutoffNotice">
         <span class="info-box-icon">🕐</span>
         <div id="cutoffNoticeText">Loading...</div>
       </div>
+
+      <div class="info-box yellow" id="quotaNotice">
+        <span class="info-box-icon">📊</span>
+        <div><strong>每日收衣名額限制 Daily Pickup Quota:</strong> 每日只有 <strong>10 個</strong>收衣名額，額滿即止，敬請盡早預約。<br>
+        <span style="font-size:12px">Only <strong>10</strong> pickup slots available per day. First-come, first-served. Please book early.</span></div>
+      </div>
+
+      <div class="info-box red" id="weekendQuotaNotice" style="display:none;">
+        <span class="info-box-icon">⚠️</span>
+        <div><strong>週末落單提醒 Weekend Order Notice:</strong> 星期五、六落單如需星期一、二收件，名額有限。滿額後最快安排星期三或之後收件。<br>
+        <span style="font-size:12px">Orders placed on Fri/Sat for Mon/Tue pickup are subject to quota. If full, earliest available pickup is Wednesday or later.</span></div>
+      </div>
+
       <div class="info-box teal" style="margin-top:-8px;">
         <span class="info-box-icon">📌</span>
-        <div><strong>Service Hours 營業時間:</strong> Monday – Saturday（星期一至六）。Sunday closed 星期日休息。</div>
+        <div><strong>Service Hours 營業時間:</strong> Monday – Saturday（星期一至六）。Sunday closed 星期日休息。每日最後收衣時間 10pm。</div>
       </div>
 
       <div class="form-label" style="margin-bottom:10px; margin-top:8px;">📅 Pickup Date 收件日期 <span class="required">*</span></div>
@@ -936,7 +948,8 @@ body.admin-mode .admin-only { display:block !important; }
 var CONFIG = {
   WHATSAPP_NUMBER: '85266291949',
   ADMIN_PIN: '1949',
-  CUTOFF_HOUR: 11,
+  CUTOFF_HOUR: 16,
+  DAILY_QUOTA: 10,
   MIN_ORDER_NORMAL: 300,
   MIN_ORDER_REMOTE: 500,
   GOOGLE_SHEET_URL:'https://script.google.com/macros/s/AKfycbzoFfGHlf3pA6WpcsmElxUTnoIxAPdQtYM99bnUu5BaXmqb8C7e2PvbGnfNEHZ8dig/exec'
@@ -1053,11 +1066,10 @@ var driverResult = null;
 var adminMode = false;
 var orderData = {};
 
-/* In-memory order counter backup (persists within same session) */
 var orderCounters = {};
 
 /* ================================================================
-   ORDER NUMBER GENERATOR — SLD-WO{YYYYMM}{NNN}
+   ORDER NUMBER GENERATOR
    ================================================================ */
 function generateOrderId() {
   var now = new Date();
@@ -1068,17 +1080,13 @@ function generateOrderId() {
 
   var count = orderCounters[yearMonth] || 0;
   if (count === 0) {
-    try {
-      count = parseInt(localStorage.getItem(counterKey)) || 0;
-    } catch (e) { /* localStorage unavailable */ }
+    try { count = parseInt(localStorage.getItem(counterKey)) || 0; } catch (e) {}
   }
 
   count++;
   orderCounters[yearMonth] = count;
 
-  try {
-    localStorage.setItem(counterKey, String(count));
-  } catch (e) { /* localStorage unavailable */ }
+  try { localStorage.setItem(counterKey, String(count)); } catch (e) {}
 
   var seq = String(count).padStart(3, '0');
   return 'SLD-WO' + yearMonth + seq;
@@ -1192,15 +1200,24 @@ function getMinOrder() { return isRemoteArea() ? CONFIG.MIN_ORDER_REMOTE : CONFI
 function getSelectedDistrict() { return document.getElementById('customerArea').value; }
 
 /* ================================================================
-   DATE & TIME SLOT
+   DATE & TIME SLOT — NEW RULES
+   No same-day pickup. Must book at least 1 day ahead.
+   Before 4pm: next-day all slots (including morning before 10am).
+   After 4pm: next-day only 1pm+ slots.
+   Last pickup daily: 10pm.
+   10 quota per day.
+   Fri/Sat orders for Mon/Tue: if quota full, earliest Wed.
    ================================================================ */
 function isSunday(dateStr) {
   return new Date(dateStr + 'T00:00:00').getDay() === 0;
 }
 
-function canPickupToday() {
-  var now = new Date();
-  return now.getHours() < CONFIG.CUTOFF_HOUR && !isSunday(getTodayStr());
+/* No same-day pickup allowed */
+function canPickupToday() { return false; }
+
+/* Check if current time is before 4pm cutoff */
+function isBeforeCutoff() {
+  return new Date().getHours() < CONFIG.CUTOFF_HOUR;
 }
 
 function getTodayStr() { return dateToStr(new Date()); }
@@ -1240,26 +1257,49 @@ function formatDatePlain(dateStr) {
 
 function isToday(dateStr) { return dateStr === getTodayStr(); }
 
+/* Returns the next calendar day string (tomorrow) */
+function getTomorrowStr() { return dateToStr(getDateOffset(1)); }
+
+/* Get available time slots for a given date */
 function getAvailableSlots(dateStr, district) {
   var zone = getDistrictZone(district);
   var isSpecialArea = (zone === 'special');
-  var today = isToday(dateStr);
+  var tomorrow = getTomorrowStr();
+  var isTomorrow = (dateStr === tomorrow);
+  var beforeCutoff = isBeforeCutoff();
+
   var slots = [];
 
-  if (today) {
-    var hour = new Date().getHours();
-    if (hour < 16) slots.push('slotC');
-    if (hour < 21) slots.push('slotD');
-    if (isSpecialArea && hour < 11) slots.push('slotSpecial');
+  if (isTomorrow && !beforeCutoff) {
+    /* Ordered after 4pm → next day only 1pm+ pickup */
+    slots.push('slotC', 'slotD');
+    /* slotSpecial (09:00-12:00) is before 1pm, not available */
   } else {
+    /* Before 4pm for tomorrow, or any date 2+ days out → all slots */
     slots.push('slotA', 'slotC', 'slotD');
     if (isSpecialArea) slots.push('slotSpecial');
   }
   return slots;
 }
 
+/* Find next N non-Sunday dates starting from tomorrow */
+function getNextAvailableDates(count) {
+  var dates = [];
+  var offset = 1;
+  while (dates.length < count && offset < 30) {
+    var d = getDateOffset(offset);
+    var ds = dateToStr(d);
+    if (!isSunday(ds)) {
+      dates.push({ dateStr: ds, offset: offset });
+    }
+    offset++;
+  }
+  return dates;
+}
+
 function initScheduleStep() {
   updateCutoffNotice();
+  updateWeekendNotice();
   renderDateButtons();
   var min = getMinOrder();
   document.getElementById('minOrderText').innerHTML =
@@ -1277,14 +1317,24 @@ function initScheduleStep() {
 
 function updateCutoffNotice() {
   var ct = document.getElementById('cutoffNoticeText');
-  if (canPickupToday()) {
-    ct.innerHTML = '<strong>截單時間 Cutoff: 今日 ' + CONFIG.CUTOFF_HOUR + ':00 AM</strong><br>' +
-      '現在落單 → 最早可選今日下午收件<br>' +
-      '<span style="font-size:12px">Order before ' + CONFIG.CUTOFF_HOUR + 'AM = same-day afternoon pickup available</span>';
+  var beforeCutoff = isBeforeCutoff();
+
+  if (beforeCutoff) {
+    ct.innerHTML = '<strong>下午4點前落單 Order before 4:00 PM</strong><br>' +
+      '不設即日收件 — 可安排隔日 10am 前收件（所有時段均可選擇）<br>' +
+      '<span style="font-size:12px">No same-day pickup — Order before 4PM → all time slots available for next-day pickup (incl. morning before 10AM)</span>';
   } else {
-    ct.innerHTML = '<strong>今日截單時間已過 Past ' + CONFIG.CUTOFF_HOUR + ':00 AM</strong><br>' +
-      '現在落單 → 最早可選明日收件<br>' +
-      '<span style="font-size:12px">Order after ' + CONFIG.CUTOFF_HOUR + 'AM = earliest pickup is tomorrow</span>';
+    ct.innerHTML = '<strong>已過下午4點 Past 4:00 PM</strong><br>' +
+      '不設即日收件 — 隔日 1pm 後才能收件（只限下午及晚間時段），每日最後收衣時間 10pm<br>' +
+      '<span style="font-size:12px">No same-day pickup — Order after 4PM → next-day pickup only from 1PM onwards. Last pickup 10PM daily.</span>';
+  }
+}
+
+function updateWeekendNotice() {
+  var dayOfWeek = new Date().getDay(); /* 0=Sun, 5=Fri, 6=Sat */
+  var el = document.getElementById('weekendQuotaNotice');
+  if (el) {
+    el.style.display = (dayOfWeek === 5 || dayOfWeek === 6) ? 'flex' : 'none';
   }
 }
 
@@ -1292,52 +1342,56 @@ function renderDateButtons() {
   var grid = document.getElementById('quickDateGrid');
   grid.innerHTML = '';
 
-  var canToday = canPickupToday();
-  var todayStr = getTodayStr();
-  var tomStr = dateToStr(getDateOffset(1));
-  var dayAfterStr = dateToStr(getDateOffset(2));
+  /* Get next 3 available (non-Sunday) dates starting from tomorrow */
+  var availDates = getNextAvailableDates(3);
+  var tomorrow = getTomorrowStr();
+  var beforeCutoff = isBeforeCutoff();
 
-  var buttons = [
-    {
-      dateStr: todayStr, icon: '⚡', label: 'Today 今天',
-      dateDisplay: formatDateNice(todayStr),
-      disabled: !canToday || isSunday(todayStr),
-      noteText: isSunday(todayStr) ? '休息日 Closed' : (!canToday ? '已截單 Cutoff' : '可選'),
-      noteClass: isSunday(todayStr) || !canToday ? 'red' : 'green'
-    },
-    {
-      dateStr: tomStr, icon: '📅', label: 'Tomorrow 明天',
-      dateDisplay: formatDateNice(tomStr),
-      disabled: isSunday(tomStr),
-      noteText: isSunday(tomStr) ? '休息日 Closed' : '',
-      noteClass: 'red'
-    },
-    {
-      dateStr: dayAfterStr, icon: '📅', label: 'Day After 後天',
-      dateDisplay: formatDateNice(dayAfterStr),
-      disabled: isSunday(dayAfterStr),
-      noteText: isSunday(dayAfterStr) ? '休息日 Closed' : '',
-      noteClass: 'red'
-    },
-    {
-      dateStr: '__custom__', icon: '🗓️', label: 'Pick Date 自選',
-      dateDisplay: 'Choose on calendar', disabled: false, noteText: '', noteClass: ''
+  /* Collect dateStr values for checking if selectedDate is among quick buttons */
+  var quickDateStrs = availDates.map(function(d) { return d.dateStr; });
+
+  availDates.forEach(function(d, idx) {
+    var isTom = (d.dateStr === tomorrow);
+    var dayAfterTom = dateToStr(getDateOffset(2));
+    var isDayAfter = (d.dateStr === dayAfterTom);
+    var label = '';
+    if (isTom) label = 'Tomorrow 明天';
+    else if (isDayAfter) label = 'Day After 後天';
+    else label = formatDateNice(d.dateStr);
+
+    var noteText = '';
+    var noteClass = '';
+
+    /* If selecting tomorrow and it's after 4pm, warn about limited slots */
+    if (isTom && !beforeCutoff) {
+      noteText = '1pm後收件 After 1pm only';
+      noteClass = 'orange';
     }
-  ];
 
-  buttons.forEach(function(b) {
-    var isSelected = selectedDate === b.dateStr || (b.dateStr === '__custom__' && selectedDate && selectedDate !== todayStr && selectedDate !== tomStr && selectedDate !== dayAfterStr);
+    var isSelected = selectedDate === d.dateStr;
     var div = document.createElement('div');
-    div.className = 'date-btn' + (b.disabled ? ' disabled' : '') + (isSelected ? ' selected' : '');
-    div.setAttribute('data-datestr', b.dateStr);
-    var noteHTML = b.noteText ? '<div class="db-note ' + b.noteClass + '">' + b.noteText + '</div>' : '';
+    div.className = 'date-btn' + (isSelected ? ' selected' : '');
+    div.setAttribute('data-datestr', d.dateStr);
+
+    var noteHTML = noteText ? '<div class="db-note ' + noteClass + '">' + noteText + '</div>' : '';
     div.innerHTML =
-      '<div class="db-icon">' + b.icon + '</div>' +
-      '<div class="db-label">' + b.label + '</div>' +
-      '<div class="db-date">' + b.dateDisplay + '</div>' +
+      '<div class="db-icon">📅</div>' +
+      '<div class="db-label">' + label + '</div>' +
+      '<div class="db-date">' + formatDateNice(d.dateStr) + '</div>' +
       noteHTML;
     grid.appendChild(div);
   });
+
+  /* Custom date picker button */
+  var isCustomSelected = selectedDate && quickDateStrs.indexOf(selectedDate) === -1;
+  var customDiv = document.createElement('div');
+  customDiv.className = 'date-btn' + (isCustomSelected ? ' selected' : '');
+  customDiv.setAttribute('data-datestr', '__custom__');
+  customDiv.innerHTML =
+    '<div class="db-icon">🗓️</div>' +
+    '<div class="db-label">Pick Date 自選</div>' +
+    '<div class="db-date">Choose on calendar</div>';
+  grid.appendChild(customDiv);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1349,7 +1403,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (dateStr === '__custom__') {
       document.getElementById('customDateWrap').style.display = 'block';
-      var minDate = canPickupToday() ? getTodayStr() : dateToStr(getDateOffset(1));
+      /* Min date is tomorrow */
+      var minDate = getTomorrowStr();
       var picker = document.getElementById('pickupDateInput');
       picker.setAttribute('min', minDate);
       picker.focus();
@@ -1366,6 +1421,13 @@ function onCustomDatePicked(value) {
   if (!value) return;
   if (isSunday(value)) {
     showModal('星期日休息 Sunday Closed', '星期日不設服務，請選擇星期一至六。Sorry, we do not provide service on Sundays. Please choose Monday to Saturday.');
+    document.getElementById('pickupDateInput').value = '';
+    return;
+  }
+  /* Must be at least tomorrow */
+  var today = getTodayStr();
+  if (value <= today) {
+    showModal('不設即日收件 No Same-Day Pickup', '所有訂單需至少提前1天預約。請選擇明天或之後的日期。All orders require at least 1 day advance booking. Please select tomorrow or later.');
     document.getElementById('pickupDateInput').value = '';
     return;
   }
@@ -1411,8 +1473,15 @@ function renderSlots() {
     div.setAttribute('data-slot', slotId);
 
     var noteText = '';
-    if (!isAvailable && isToday(selectedDate)) noteText = '時段已過 Passed';
-    if (!isAvailable && !isToday(selectedDate) && slotId === 'slotSpecial') noteText = '僅限東涌/愉景灣';
+    var tomorrow = getTomorrowStr();
+    var isTomorrow = (selectedDate === tomorrow);
+    var beforeCutoff = isBeforeCutoff();
+
+    if (!isAvailable && isTomorrow && !beforeCutoff) {
+      noteText = '4pm後落單不可選 Not available after 4pm order';
+    } else if (!isAvailable && slotId === 'slotSpecial') {
+      noteText = '僅限東涌/愉景灣';
+    }
     if (slotId === 'slotSpecial' && isAvailable) noteText = '僅限東涌/愉景灣';
 
     div.innerHTML =
@@ -1716,7 +1785,6 @@ function sendToGoogleSheets(orderId) {
 function submitOrder() {
   var orderId = generateOrderId();
 
-  /* Save to Google Sheets */
   try { sendToGoogleSheets(orderId); } catch(err) { console.error('Sheets error:', err); }
 
   var ln = '\n';
@@ -1800,10 +1868,8 @@ function submitOrder() {
   msg += 'Final charges confirmed after item assessment.' + ln;
   msg += '最終費用將在取衣評估後確認。' + ln;
 
-  /* Open WhatsApp */
   window.open('https://wa.me/' + CONFIG.WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
 
-  /* Show success page */
   document.getElementById('orderNumber').textContent = 'Order 訂單 ' + orderId;
 
   if (orderData.photoCount > 0) {
